@@ -63,7 +63,7 @@
                 </td>
                 <td>
                     <?php if (!empty($d['foto_produk'])): ?>
-                        <img src="../uploads/<?php echo $d['foto_produk']; ?>" alt="Foto <?php echo $d['nama']; ?>" style="width: 100px; height: auto;">
+                        <img src="../uploads/<?php echo $d['foto_produk']; ?>" alt="Foto <?php echo $d['nama_produk']; ?>" style="width: 100px; height: auto;">
                     <?php else: ?>
                         <p>Tidak ada foto</p>
                     <?php endif; ?>
