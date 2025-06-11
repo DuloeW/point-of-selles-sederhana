@@ -12,7 +12,7 @@
         <a href="listproduk.php">kembali</a>
     </button>
 <br><br>
-    <form action="tambahaksi.php" method="post" enctype="multipart/form-data">
+    <form action="../handler/tambahaksi.php" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td><label for="kode_produk">Kode Produk</label></td>

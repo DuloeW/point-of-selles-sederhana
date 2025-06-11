@@ -8,7 +8,8 @@ session_start(); // Mulai session untuk menyimpan pesan
  * @param string $message Pesan yang akan ditampilkan.
  * @param string $type Tipe pesan (success, error, info).
  */
-function display_message($message, $type = 'info') {
+function display_message($message, $type = 'info')
+{
     $_SESSION['upload_message'] = $message;
     $_SESSION['upload_type'] = $type;
     header("Location: upload_form.php"); // Redirect kembali ke form
@@ -23,7 +24,8 @@ function display_message($message, $type = 'info') {
  * @param int $max_size Ukuran maksimum file dalam bytes.
  * @return bool True jika valid, false jika tidak.
  */
-function validate_upload($file_data, $target_file, $allowed_types, $max_size) {
+function validate_upload($file_data, $target_file, $allowed_types, $max_size)
+{
     // Cek apakah file benar-benar diupload
     if (!isset($file_data) || $file_data['error'] !== UPLOAD_ERR_OK) {
         display_message("Terjadi kesalahan saat mengunggah file. Kode error: " . $file_data['error'], 'error');
@@ -34,7 +36,7 @@ function validate_upload($file_data, $target_file, $allowed_types, $max_size) {
 
     // Cek apakah file adalah gambar asli atau palsu
     $check = getimagesize($file_data["tmp_name"]);
-    if($check === false) {
+    if ($check === false) {
         display_message("File yang diupload bukan gambar yang valid.", 'error');
         return false;
     }
@@ -69,9 +71,9 @@ if (!isset($_POST["submit"])) {
 
 // Tentukan direktori tujuan upload
 // SESUAIKAN PATH INI DENGAN LOKASI DIREKTORI htdocs ANDA atau sub-direktori di dalamnya
-$target_dir = __DIR__ . "/uploads/"; // Membuat folder 'uploads' di dalam folder skrip ini
+$target_dir = '../upload/'; // Folder 'upload' di root direktori proyek
 
-// Buat direktori 'uploads' jika belum ada
+// Buat direktori 'upload' jika belum ada
 if (!is_dir($target_dir)) {
     if (!mkdir($target_dir, 0755, true)) { // Gunakan 0755 untuk izin yang lebih aman
         display_message("Gagal membuat direktori upload. Periksa izin folder server.", 'error');
@@ -99,6 +101,3 @@ if (move_uploaded_file($file_data["tmp_name"], $target_file)) {
     // Tangkap error jika move_uploaded_file gagal (misal: izin tulis)
     display_message("Maaf, terjadi kesalahan saat memindahkan file Anda. Periksa izin folder server.", 'error');
 }
-
-
-?>

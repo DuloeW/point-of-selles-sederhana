@@ -1,5 +1,6 @@
 <?php
-include 'koneksi.php'; 
+include '../auth/koneksi.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

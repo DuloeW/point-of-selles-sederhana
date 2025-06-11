@@ -1,9 +1,9 @@
 <?php 
+include '../auth/koneksi.php';
 
-include 'koneksi.php';
 
 $kode_produk = $_POST["kode_produk"];
-$nama = $_POST["nama_produk"];
+$nama_produk = $_POST["nama_produk"];
 $deskripsi = $_POST["deskripsi"];
 $harga_jual = $_POST["harga_jual"];
 $stok = $_POST["stok"];
@@ -13,7 +13,7 @@ $tanggal_dibuat = $_POST["tanggal_dibuat"];
 $tanggal_diperbarui = $_POST["tanggal_diperbarui"];
 
 // Proses upload file
-$target_dir = "uploads/";
+$target_dir = "../uploads/";
 $foto_produk = "";
 
 // Cek apakah direktori uploads ada, jika tidak, buat direktori
@@ -58,7 +58,7 @@ if(isset($_FILES["foto_produk"]) && $_FILES["foto_produk"]["error"] == 0) {
 // Simpan data ke database
 mysqli_query($koneksi, "INSERT INTO produk (kode_produk, nama_produk, deskripsi, harga_jual, stok, satuan, kategori, foto_produk, tanggal_dibuat, tanggal_diperbarui) VALUES ('$kode_produk', '$nama_produk', '$deskripsi', '$harga_jual', '$stok', '$satuan', '$kategori', '$foto_produk', '$tanggal_dibuat', '$tanggal_diperbarui')");
 
-header("location:listproduk.php");
+header("location:../pages/listproduk.php");
 
 
 ?>

@@ -1,5 +1,6 @@
 <?php
-include 'koneksi.php';
+include '../auth/koneksi.php';
+
 
 $id_produk = $_POST["id_produk"];
 $kode_produk = $_POST["kode_produk"];
