@@ -10,7 +10,7 @@
 <body>
     <h1>List Produk</h1>
     <button>
-        <a href="tambahproduk.php">Tambah Produk</a>
+        <a href="tambah-produk-view.php">Tambah Produk</a>
     </button>
     <br><br>
     <table border="3">
@@ -26,6 +26,7 @@
             <th>Foto Produk</th>
             <th>Tanggal Dibuat</th>
             <th>Tanggal Diperbarui</th>
+            <th>Aksi</th>
         </tr>
         <?php
         include '../auth/koneksi.php';
@@ -77,10 +78,10 @@
 
                 <td>
                     <button class="edit">
-                        <a href="edit.php?id_produk=<?php echo $d['id_produk'] ?>">EDIT</a>
+                        <a href="edit-produk-view.php?id_produk=<?php echo $d['id_produk'] ?>">EDIT</a>
                     </button>
                     <button class="hapus">
-                        <a href="../handler/hapus.php?id_produk=<?php echo $d['id_produk'] ?>">HAPUS</a>
+                        <a href="../handler/hapus_produk_handler.php?id_produk=<?php echo $d['id_produk'] ?>">HAPUS</a>
                     </button>
                 </td>
             </tr>
@@ -89,7 +90,7 @@
         ?>
     </table><br><br>
     <button>
-        <a href="menu_produk.php">Kembali</a>
+        <a href="menu-produk-view.php">Kembali</a>
     </button>
 </body>
 

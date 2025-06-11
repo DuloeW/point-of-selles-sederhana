@@ -10,7 +10,7 @@
 <body>
     <h2>Edit Data Produk</h2>
     <br />
-    <a href="listproduk.php">KEMBALI</a>
+    <a href="list-produk-view.php">KEMBALI</a>
     <br /><br />
 
 
@@ -38,7 +38,7 @@
     while ($d = mysqli_fetch_array($data)) {
     ?>
 
-        <form method="post" action="update.php" enctype="multipart/form-data">
+        <form method="post" action="update_produk_handler.php" enctype="multipart/form-data">
             <table>
                 <tr>
                     <td><input type="hidden" name="id_produk" value="<?php echo $d['id_produk']; ?>"></td>

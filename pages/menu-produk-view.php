@@ -13,10 +13,10 @@
     echo "<h2>Selamat datang $username, anda berhasil login</h2>
     Menu Utama<br><br>
     <button>
-        <a href='listproduk.php'>Data Produk</a>
+        <a href='list-produk-view.php'>Data Produk</a>
     </button><br><br>
     <button>
-        <a href='tambahproduk.php'>Tambah Produk</a>
+        <a href='tambah-produk-view.php'>Tambah Produk</a>
     </button><br><br>";
     ?>
     <form method="post" action="logout.php">
