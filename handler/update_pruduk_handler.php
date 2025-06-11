@@ -27,5 +27,5 @@ mysqli_query($koneksi, "UPDATE produk SET
     tanggal_diperbarui='$tanggal_diperbarui' 
     WHERE id_produk='$id_produk'");
 
-header("location:listproduk.php");
+header("location:../pages/list-produk-view.php");
 ?>

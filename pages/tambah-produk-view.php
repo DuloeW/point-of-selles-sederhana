@@ -9,7 +9,7 @@
   <h1>Tambah Produk</h1>
 
     <button>
-        <a href="listproduk.php">kembali</a>
+        <a href="list-produk-view.php">kembali</a>
     </button>
 <br><br>
     <form action="../handler/tambahaksi.php" method="post" enctype="multipart/form-data">
