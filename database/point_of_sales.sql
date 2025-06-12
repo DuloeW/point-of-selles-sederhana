@@ -1,247 +1,173 @@
+-- Hapus dan buat ulang database
 DROP DATABASE IF EXISTS point_of_sales;
 CREATE DATABASE point_of_sales;
 USE point_of_sales;
 
+-- Tabel produk
 CREATE TABLE produk (
-    id_produk int PRIMARY KEY AUTO_INCREMENT,
-    kode_produk varchar(50) UNIQUE NOT null,
-    nama_produk varchar(255) NOT null,
-    deskripsi text,
-    harga_jual decimal(10, 2) NOT null DEFAULT 0.00,
-    stok int NOT null DEFAULT 0,
-    satuan varchar(50) NOT null,
-    kategori varchar(100),
-    foto_produk varchar(255),
-    tanggal_dibuat datetime NOT null DEFAULT CURRENT_TIMESTAMP,
-    tanggal_diperbarui datetime NOT null DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    id_produk INT PRIMARY KEY AUTO_INCREMENT,
+    kode_produk VARCHAR(50) UNIQUE NOT NULL,
+    nama_produk VARCHAR(255) NOT NULL,
+    deskripsi TEXT,
+    harga_jual DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    stok INT NOT NULL DEFAULT 0,
+    satuan VARCHAR(50) NOT NULL,
+    kategori VARCHAR(100),
+    foto_produk VARCHAR(255),
+    tanggal_dibuat DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    tanggal_diperbarui DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Tabel pengguna
 CREATE TABLE pengguna (
-	id_pengguna int PRIMARY KEY AUTO_INCREMENT,
-    username varchar(50) UNIQUE NOT null,
-    password varchar(255) NOT null,
-    nama_lengkap varchar(100) NOT null,
-    role ENUM('Admin','Kasir') NOT null DEFAULT 'Kasir',
-    status ENUM('Active', 'Inactive') NOT null DEFAULT 'Active'
+    id_pengguna INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    nama_lengkap VARCHAR(100) NOT NULL,
+    role ENUM('Admin', 'Kasir') NOT NULL DEFAULT 'Kasir',
+    status ENUM('Active', 'Inactive') NOT NULL DEFAULT 'Active'
 );
 
+-- Tabel pelanggan
 CREATE TABLE pelanggan (
-	id_pelanggan int PRIMARY KEY AUTO_INCREMENT,
-    nama_lengkap varchar(255) NOT null,
-    telepon varchar(50) UNIQUE,
-    alamat text,
-    email varchar(100)
+    id_pelanggan INT PRIMARY KEY AUTO_INCREMENT,
+    nama_lengkap VARCHAR(255) NOT NULL,
+    telepon VARCHAR(50) UNIQUE,
+    alamat TEXT,
+    email VARCHAR(100)
 );
 
+-- Tabel member
+CREATE TABLE member (
+    id_member INT PRIMARY KEY AUTO_INCREMENT,
+    id_pelanggan INT NOT NULL,
+    level_member ENUM('Gold', 'Silver', 'Bronze') NOT NULL DEFAULT 'Bronze',
+    tanggal_daftar DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    poin INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
+);
+
+-- Tabel penjualan
 CREATE TABLE penjualan (
-	id_penjualan int PRIMARY KEY AUTO_INCREMENT,
-    nomor_invoice varchar(100) UNIQUE NOT null,
-    tanggal_penjualan datetime NOT null DEFAULT CURRENT_TIMESTAMP,
-    total_bayar decimal(10,2) NOT null DEFAULT 0.00,
-    jumlah_bayar decimal(10,2) NOT null DEFAULT 0.00,
-    kembalian decimal(10,2) NOT null DEFAULT 0.00,
-    tipe_pembayaran ENUM('Cash','Debit', 'Credit', 'QRIS') NOT null DEFAULT 'Cash',
-    id_kasir int,
-    id_pelanggan int,
-    status_penjualan ENUM('Completed', 'Pending', 'Cancelled') NOT null DEFAULT 'Completed',
+    id_penjualan INT PRIMARY KEY AUTO_INCREMENT,
+    nomor_invoice VARCHAR(100) UNIQUE NOT NULL,
+    tanggal_penjualan DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total_bayar DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    jumlah_bayar DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    kembalian DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    tipe_pembayaran ENUM('Cash','Debit', 'Credit', 'QRIS') NOT NULL DEFAULT 'Cash',
+    id_kasir INT,
+    id_pelanggan INT,
+    status_penjualan ENUM('Completed', 'Pending', 'Cancelled') NOT NULL DEFAULT 'Completed',
     FOREIGN KEY (id_kasir) REFERENCES pengguna(id_pengguna),
     FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
 );
 
-CREATE TABLE detail_penjualan(
-	id_detail_penjualan int PRIMARY KEY AUTO_INCREMENT,
-    id_penjualan int NOT null,
-    id_produk int NOT null,
-    jumlah_beli int NOT null DEFAULT 1,
-    harga_saat_ini decimal(10,2) NOT null DEFAULT 0.00,
-    subtotal decimal(10,2) NOT null DEFAULT 0.00,
+-- Tabel detail_penjualan
+CREATE TABLE detail_penjualan (
+    id_detail_penjualan INT PRIMARY KEY AUTO_INCREMENT,
+    id_penjualan INT NOT NULL,
+    id_produk INT NOT NULL,
+    jumlah_beli INT NOT NULL DEFAULT 1,
+    harga_saat_ini DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     FOREIGN KEY (id_penjualan) REFERENCES penjualan(id_penjualan),
     FOREIGN KEY (id_produk) REFERENCES produk(id_produk)
 );
 
--- Menggunakan database yang relevan
+-- Tabel diskon_member
+CREATE TABLE diskon_member (
+    level_member ENUM('Gold', 'Silver', 'Bronze') PRIMARY KEY,
+    persentase_diskon DECIMAL(5,2) NOT NULL DEFAULT 0.00
+);
 
--- --------------------------------------------------------
--- INSERT DATA UNTUK TABEL PENGGUNA
--- --------------------------------------------------------
-INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `nama_lengkap`, `role`, `status`) VALUES
-(1, 'admin', 'hashed_password_admin', 'Administrator Utama', 'Admin', 'Active'),
-(2, 'kasir_budi', 'hashed_password_budi', 'Budi Santoso', 'Kasir', 'Active'),
-(3, 'kasir_citra', 'hashed_password_citra', 'Citra Ayu', 'Kasir', 'Active'),
-(4, 'kasir_dian', 'hashed_password_dian', 'Dian Permata', 'Kasir', 'Inactive');
+-- Data: produk
+INSERT INTO produk (kode_produk, nama_produk, deskripsi, harga_jual, stok, satuan, kategori, foto_produk)
+VALUES 
+('PRD001', 'Air Mineral', 'Air mineral botol 600ml', 3000.00, 100, 'Botol', 'Minuman', 'air.jpg'),
+('PRD002', 'Roti Tawar', 'Roti tawar kupas 200gr', 12000.00, 50, 'Pack', 'Makanan', 'roti.jpg'),
+('PRD003', 'Teh Botol', 'Minuman teh manis', 5000.00, 70, 'Botol', 'Minuman', 'teh.jpg'),
+('PRD004', 'Kopi Instan', 'Kopi sachet 20gr', 1500.00, 200, 'Sachet', 'Minuman', 'kopi.jpg'),
+('PRD005', 'Sabun Mandi', 'Sabun batang', 3500.00, 80, 'Batang', 'Kebutuhan', 'sabun.jpg'),
+('PRD006', 'Sikat Gigi', 'Sikat gigi dewasa', 6000.00, 40, 'Pcs', 'Kebutuhan', 'sikat.jpg'),
+('PRD007', 'Shampoo 100ml', 'Shampoo kemasan kecil', 8000.00, 60, 'Botol', 'Kebutuhan', 'shampoo.jpg'),
+('PRD008', 'Minyak Goreng', 'Minyak 1 liter', 14000.00, 90, 'Liter', 'Dapur', 'minyak.jpg'),
+('PRD009', 'Gula Pasir', 'Gula 1kg', 13000.00, 75, 'Kg', 'Dapur', 'gula.jpg'),
+('PRD010', 'Mie Instan', 'Mie instan goreng', 3000.00, 150, 'Bungkus', 'Makanan', 'mie.jpg');
 
--- --------------------------------------------------------
--- INSERT DATA UNTUK TABEL PELANGGAN
--- --------------------------------------------------------
-INSERT INTO `pelanggan` (`id_pelanggan`, `nama_lengkap`, `telepon`, `alamat`, `email`) VALUES
-(1, 'Andi Wijaya', '081234567890', 'Jl. Merdeka No. 1, Jakarta', 'andi.wijaya@example.com'),
-(2, 'Siti Aminah', '081234567891', 'Jl. Pahlawan No. 2, Surabaya', 'siti.aminah@example.com'),
-(3, 'Rina Hartono', '081234567892', 'Jl. Sudirman No. 3, Bandung', 'rina.hartono@example.com'),
-(4, 'Joko Susilo', '081234567893', 'Jl. Gajah Mada No. 4, Yogyakarta', 'joko.s@example.com'),
-(5, 'Dewi Lestari', '081234567894', 'Jl. Diponegoro No. 5, Semarang', 'dewi.lestari@example.com'),
-(6, 'Bambang Irawan', '081234567895', 'Jl. Imam Bonjol No. 6, Medan', 'bambang.irawan@example.com'),
-(7, 'Lia Kurnia', '081234567896', 'Jl. Teuku Umar No. 7, Makassar', 'lia.kurnia@example.com'),
-(8, 'Agus Salim', '081234567897', 'Jl. Gatot Subroto No. 8, Denpasar', 'agus.salim@example.com'),
-(9, 'Fitriani', '081234567898', 'Jl. Hasanuddin No. 9, Palembang', 'fitriani@example.com'),
-(10, 'Eko Prasetyo', '081234567899', 'Jl. Ahmad Yani No. 10, Balikpapan', 'eko.prasetyo@example.com');
+-- Data: pengguna
+INSERT INTO pengguna (username, password, nama_lengkap, role, status)
+VALUES 
+('admin1', 'pass123', 'Admin Utama', 'Admin', 'Active'),
+('kasir1', 'pass456', 'Kasir Satu', 'Kasir', 'Active'),
+('kasir2', 'pass789', 'Kasir Dua', 'Kasir', 'Active'),
+('admin2', 'adminpass', 'Admin Dua', 'Admin', 'Inactive'),
+('kasir3', 'password', 'Kasir Tiga', 'Kasir', 'Active'),
+('kasir4', 'pass321', 'Kasir Empat', 'Kasir', 'Inactive'),
+('kasir5', 'test123', 'Kasir Lima', 'Kasir', 'Active'),
+('admin3', 'securepass', 'Admin Tiga', 'Admin', 'Active'),
+('kasir6', 'abc123', 'Kasir Enam', 'Kasir', 'Active'),
+('admin4', 'root123', 'Admin Empat', 'Admin', 'Active');
 
--- --------------------------------------------------------
--- INSERT DATA UNTUK TABEL PRODUK
--- --------------------------------------------------------
-INSERT INTO `produk` (`id_produk`, `kode_produk`, `nama_produk`, `deskripsi`, `harga_jual`, `stok`, `satuan`, `kategori`) VALUES
-(1, 'P001', 'Laptop Pro 14', 'Laptop canggih untuk profesional', 15000000.00, 15, 'Unit', 'Elektronik'),
-(2, 'P002', 'Mouse Wireless Silent', 'Mouse tanpa kabel dengan klik senyap', 150000.00, 120, 'Unit', 'Aksesoris Komputer'),
-(3, 'P003', 'Keyboard Mechanical RGB', 'Keyboard gaming dengan lampu RGB', 750000.00, 50, 'Unit', 'Aksesoris Komputer'),
-(4, 'P004', 'Kopi Arabika 250g', 'Biji kopi arabika pilihan', 85000.00, 200, 'Pack', 'Minuman'),
-(5, 'P005', 'Teh Hijau Celup', 'Isi 25 kantong teh hijau', 25000.00, 300, 'Box', 'Minuman'),
-(6, 'P006', 'Air Mineral 600ml', 'Air mineral murni', 3500.00, 1000, 'Botol', 'Minuman'),
-(7, 'P007', 'Roti Tawar Gandum', 'Roti tawar sehat dari gandum utuh', 18000.00, 75, 'Bungkus', 'Makanan'),
-(8, 'P008', 'Susu UHT Coklat 1L', 'Susu UHT rasa coklat', 22000.00, 150, 'Karton', 'Minuman'),
-(9, 'P009', 'Buku Tulis Sinar Dunia', 'Buku tulis isi 58 lembar', 5000.00, 500, 'Pcs', 'ATK'),
-(10, 'P010', 'Pulpen Pilot G2', 'Pulpen tinta gel warna hitam', 12000.00, 400, 'Pcs', 'ATK'),
-(11, 'P011', 'Sabun Mandi Cair 450ml', 'Sabun mandi aroma lavender', 35000.00, 90, 'Botol', 'Perawatan Tubuh'),
-(12, 'P012', 'Shampoo Anti Ketombe 170ml', 'Shampoo untuk mengatasi ketombe', 28000.00, 80, 'Botol', 'Perawatan Tubuh'),
-(13, 'P013', 'Deterjen Bubuk 800g', 'Deterjen untuk pakaian bersih wangi', 19000.00, 110, 'Pack', 'Kebutuhan Rumah Tangga'),
-(14, 'P014', 'Minyak Goreng 2L', 'Minyak goreng kelapa sawit', 42000.00, 130, 'Pouch', 'Sembako'),
-(15, 'P015', 'Beras Premium 5kg', 'Beras putih pulen dan wangi', 68000.00, 60, 'Karung', 'Sembako'),
-(16, 'P016', 'Mie Instan Goreng', 'Mie instan rasa original', 3000.00, 800, 'Bungkus', 'Makanan'),
-(17, 'P017', 'Kecap Manis 600ml', 'Kecap manis dari kedelai pilihan', 21000.00, 140, 'Botol', 'Sembako'),
-(18, 'P018', 'Sambal Terasi Sachet', 'Sambal terasi siap saji', 1500.00, 600, 'Sachet', 'Bumbu'),
-(19, 'P019', 'Lampu LED 10W', 'Lampu hemat energi', 25000.00, 250, 'Unit', 'Elektronik'),
-(20, 'P020', 'Baterai AA', 'Baterai alkaline isi 4', 15000.00, 300, 'Pack', 'Elektronik');
+-- Data: pelanggan
+INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
+VALUES 
+('Budi Santoso', '0811111111', 'Jl. Merdeka No.1', 'budi@email.com'),
+('Siti Aminah', '0822222222', 'Jl. Pahlawan No.2', 'siti@email.com'),
+('Andi Wijaya', '0833333333', 'Jl. Soekarno No.3', 'andi@email.com'),
+('Dewi Lestari', '0844444444', 'Jl. Sudirman No.4', 'dewi@email.com'),
+('Rudi Hartono', '0855555555', 'Jl. Diponegoro No.5', 'rudi@email.com'),
+('Nina Kartika', '0866666666', 'Jl. Gajah Mada No.6', 'nina@email.com'),
+('Agus Salim', '0877777777', 'Jl. Asia Afrika No.7', 'agus@email.com'),
+('Tina Syahrini', '0888888888', 'Jl. Thamrin No.8', 'tina@email.com'),
+('Doni Saputra', '0899999999', 'Jl. Ahmad Yani No.9', 'doni@email.com'),
+('Linda Herlina', '0800000000', 'Jl. Gatot Subroto No.10', 'linda@email.com');
 
--- --------------------------------------------------------
--- INSERT DATA PENJUALAN & DETAIL PENJUALAN
--- Transaksi akan dibuat satu per satu untuk kejelasan
--- --------------------------------------------------------
+-- Data: member
+INSERT INTO member (id_pelanggan, level_member, poin)
+VALUES 
+(1, 'Gold', 200),
+(2, 'Silver', 120),
+(3, 'Bronze', 50),
+(4, 'Gold', 300),
+(5, 'Silver', 90),
+(6, 'Bronze', 30),
+(7, 'Gold', 180),
+(8, 'Silver', 110),
+(9, 'Bronze', 60),
+(10, 'Gold', 250);
 
--- Transaksi 1
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(1, 'INV20250610001', 33000.00, 35000.00, 2000.00, 'Cash', 2, 1);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(1, 9, 2, 5000.00, 10000.00),
-(1, 10, 1, 12000.00, 12000.00),
-(1, 6, 3, 3500.00, 10500.00);
+-- Data: penjualan
+INSERT INTO penjualan (nomor_invoice, total_bayar, jumlah_bayar, kembalian, tipe_pembayaran, id_kasir, id_pelanggan)
+VALUES 
+('INV001', 20000.00, 25000.00, 5000.00, 'Cash', 2, 1),
+('INV002', 15000.00, 20000.00, 5000.00, 'Debit', 3, 2),
+('INV003', 30000.00, 30000.00, 0.00, 'Credit', 2, 3),
+('INV004', 5000.00, 10000.00, 5000.00, 'QRIS', 2, 4),
+('INV005', 25000.00, 30000.00, 5000.00, 'Cash', 1, 5),
+('INV006', 10000.00, 10000.00, 0.00, 'Debit', 2, 6),
+('INV007', 22000.00, 25000.00, 3000.00, 'Cash', 3, 7),
+('INV008', 8000.00, 10000.00, 2000.00, 'Credit', 2, 8),
+('INV009', 12000.00, 15000.00, 3000.00, 'QRIS', 2, 9),
+('INV010', 4000.00, 5000.00, 1000.00, 'Cash', 1, 10);
 
--- Transaksi 2
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(2, 'INV20250610002', 15000000.00, 15000000.00, 0.00, 'Debit', 3, 5);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(2, 1, 1, 15000000.00, 15000000.00);
+-- Data: detail_penjualan
+INSERT INTO detail_penjualan (id_penjualan, id_produk, jumlah_beli, harga_saat_ini, subtotal)
+VALUES
+(1, 1, 2, 3000.00, 6000.00),
+(1, 2, 1, 12000.00, 12000.00),
+(2, 3, 3, 5000.00, 15000.00),
+(3, 4, 2, 1500.00, 3000.00),
+(3, 5, 2, 3500.00, 7000.00),
+(4, 6, 1, 6000.00, 6000.00),
+(5, 7, 2, 8000.00, 16000.00),
+(6, 8, 1, 14000.00, 14000.00),
+(7, 9, 1, 13000.00, 13000.00),
+(10, 10, 1, 3000.00, 3000.00);
 
--- Transaksi 3
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(3, 'INV20250610003', 15000.00, 20000.00, 5000.00, 'Cash', 2, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(3, 16, 5, 3000.00, 15000.00);
-
--- Transaksi 4
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(4, 'INV20250611004', 110000.00, 110000.00, 0.00, 'QRIS', 2, 7);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(4, 14, 1, 42000.00, 42000.00),
-(4, 15, 1, 68000.00, 68000.00);
-
--- Transaksi 5
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(5, 'INV20250611005', 165000.00, 165000.00, 0.00, 'Credit', 3, 2);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(5, 2, 1, 150000.00, 150000.00),
-(5, 20, 1, 15000.00, 15000.00);
-
--- Transaksi 6
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(6, 'INV20250611006', 53000.00, 60000.00, 7000.00, 'Cash', 2, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(6, 11, 1, 35000.00, 35000.00),
-(6, 18, 12, 1500.00, 18000.00);
-
--- Transaksi 7
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(7, 'INV20250612007', 85000.00, 85000.00, 0.00, 'Debit', 3, 8);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(7, 4, 1, 85000.00, 85000.00);
-
--- Transaksi 8
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(8, 'INV20250612008', 44000.00, 44000.00, 0.00, 'QRIS', 2, 4);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(8, 8, 2, 22000.00, 44000.00);
-
--- Transaksi 9
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(9, 'INV20250612009', 50000.00, 50000.00, 0.00, 'Cash', 3, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(9, 19, 2, 25000.00, 50000.00);
-
--- Transaksi 10
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(10, 'INV20250613010', 52000.00, 52000.00, 0.00, 'Debit', 2, 10);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(10, 7, 1, 18000.00, 18000.00),
-(10, 5, 1, 25000.00, 25000.00),
-(10, 9, 1, 5000.00, 5000.00);
-
--- Transaksi 11
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(11, 'INV20250613011', 750000.00, 750000.00, 0.00, 'Credit', 3, 3);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(11, 3, 1, 750000.00, 750000.00);
-
--- Transaksi 12
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(12, 'INV20250613012', 40000.00, 50000.00, 10000.00, 'Cash', 2, 6);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(12, 13, 1, 19000.00, 19000.00),
-(12, 17, 1, 21000.00, 21000.00);
-
--- Transaksi 13
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(13, 'INV20250614013', 28000.00, 30000.00, 2000.00, 'Cash', 3, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(13, 12, 1, 28000.00, 28000.00);
-
--- Transaksi 14
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(14, 'INV20250614014', 10500.00, 10500.00, 0.00, 'QRIS', 2, 9);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(14, 6, 3, 3500.00, 10500.00);
-
--- Transaksi 15
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(15, 'INV20250614015', 30000.00, 30000.00, 0.00, 'Debit', 3, 1);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(15, 20, 2, 15000.00, 30000.00);
-
--- Transaksi 16
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(16, 'INV20250615016', 36000.00, 40000.00, 4000.00, 'Cash', 2, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(16, 16, 12, 3000.00, 36000.00);
-
--- Transaksi 17
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(17, 'INV20250615017', 24000.00, 24000.00, 0.00, 'QRIS', 3, 5);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(17, 10, 2, 12000.00, 24000.00);
-
--- Transaksi 18
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(18, 'INV20250615018', 136000.00, 136000.00, 0.00, 'Credit', 2, 8);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(18, 15, 2, 68000.00, 136000.00);
-
--- Transaksi 19
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(19, 'INV20250615019', 42000.00, 50000.00, 8000.00, 'Cash', 3, NULL);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(19, 14, 1, 42000.00, 42000.00);
-
--- Transaksi 20
-INSERT INTO `penjualan` (`id_penjualan`, `nomor_invoice`, `total_bayar`, `jumlah_bayar`, `kembalian`, `tipe_pembayaran`, `id_kasir`, `id_pelanggan`) VALUES
-(20, 'INV20250615020', 104000.00, 104000.00, 0.00, 'Debit', 2, 2);
-INSERT INTO `detail_penjualan` (`id_penjualan`, `id_produk`, `jumlah_beli`, `harga_saat_ini`, `subtotal`) VALUES
-(20, 8, 2, 22000.00, 44000.00),
-(20, 7, 1, 18000.00, 18000.00),
-(20, 14, 1, 42000.00, 42000.00);
-
+-- Data: diskon_member
+INSERT INTO diskon_member (level_member, persentase_diskon)
+VALUES
+('Gold', 10.00),
+('Silver', 5.00),
+('Bronze', 2.50);
