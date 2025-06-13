@@ -1,3 +1,14 @@
+<?php
+require '../handler/dashboard_handler.php';
+require '../utils/produk_util.php';
+require '../utils/penjualan_util.php';
+require '../utils/pengguna_util.php';
+require '../utils/pelanggan_util.php';
+require '../utils/tools_util.php';
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,54 +27,53 @@
             <!-- header -->
             <p class="font-bold text-xl text-purple-700">Dashboard</p>
             <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Kasir: <span>Mujianto</span></p>
-                <p class="text-xs text-gray-500 font-semibold tracking-wider">12/6/2025</p>
+                <p class="font-bold">Admin: <span>Mujianto</span></p>
+                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
             </div>
         </div>
 
         <!-- containner main content -->
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
 
+            <!-- TODO get admin belum dinamis -->
             <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md shadow-gray-300 flex items-center justify-between">
                 <div>
                     <p class="text-3xl font-bold">Selamat Datang, Mujianto!</p>
-                    <p class="text-blue-100">Dashboard Kasir - Kamis, 12 Juni 2025</p>
+                    <p class="text-blue-100">Dashboard Admin - <?= getFormattedDateAndDay() ?></p>
                 </div>
                 <div class="text-right">
-                    <p class="text-2xl font-bold">11.23</p>
+                    <p class="text-2xl font-bold"><?= getFormattedTime() ?></p>
                     <p class="text-blue-100">Waktu Sekarang</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <?php
                 $dashboardData = [
                     [
                         'title' => 'Transaksi Hari Ini',
-                        'value' => 12,
+                        'value' => getTotalDataTransaksiHariIni(),
                         'suffix' => 'Transaksi',
                         'color' => 'blue',
                         'icon' => 'fa-regular fa-calendar-check' // Ganti sesuai icon yang kamu pakai
                     ],
                     [
                         'title' => 'Pendapatan Hari Ini',
-                        'value' => 'Rp 2500K',
-                        'subtext' => 'Rp 2.500.000',
+                        'value' => 'Rp ' . getPendapatanHariIni(),
+                        'subtext' => 'Rp ' . getPendapatanHariIni(),
                         'color' => 'green',
                         'icon' => 'fa-solid fa-money-bill-wave'
                     ],
                     [
                         'title' => 'Rata-rata Transaksi',
-                        'value' => 'Rp 208K',
+                        'value' => 'Rp ' . number_format(getRataRataTransaksi(), 0, ',', '.'),
                         'suffix' => 'Per transaksi',
                         'color' => 'purple',
                         'icon' => 'fa-solid fa-money-bill-wave'
                     ]
                 ];
 
-                // Perulangan untuk menampilkan setiap card
                 foreach ($dashboardData as $data) {
-                    // Set variabel untuk digunakan di card-informasi.php
                     $title = $data['title'];
                     $value = $data['value'];
                     $suffix = isset($data['suffix']) ? $data['suffix'] : '';
@@ -71,7 +81,6 @@
                     $color = $data['color'];
                     $icon = $data['icon'];
 
-                    // Include card component
                     include '../components/card-informasi.php';
                 }
                 ?>
@@ -95,58 +104,21 @@
                     <!-- Transaksi List -->
                     <div class="space-y-3">
                         <!-- Transaksi 1 -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-700 rounded-full flex items-center justify-center text-white font-bold">
-                                    A
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">INV001</p>
-                                    <p class="text-sm text-gray-500">Andi Wijaya</p>
-                                    <p class="text-xs text-gray-400">3 items • 10:30</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-green-600">Rp 50,000</p>
-                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Completed</span>
-                            </div>
-                        </div>
-
-                        <!-- Transaksi 2 -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                    S
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">INV002</p>
-                                    <p class="text-sm text-gray-500">Sari Dewi</p>
-                                    <p class="text-xs text-gray-400">2 items • 11:15</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-green-600">Rp 45,000</p>
-                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Completed</span>
-                            </div>
-                        </div>
-
-                        <!-- Transaksi 3 -->
-                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                                    B
-                                </div>
-                                <div>
-                                    <p class="font-medium text-gray-800">INV003</p>
-                                    <p class="text-sm text-gray-500">Budi Hartono</p>
-                                    <p class="text-xs text-gray-400">5 items • 12:45</p>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="font-semibold text-green-600">Rp 75,000</p>
-                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Completed</span>
-                            </div>
-                        </div>
+                        <?php
+                        $transaksiHariIni = getTransaksiHariIni();
+                        if (empty($transaksiHariIni)) {
+                            echo '<p class="text-gray-500 text-center text-sm">Tidak ada transaksi hari ini.</p>';
+                        } else {
+                            foreach ($transaksiHariIni as $transaksi) {
+                                $username = $transaksi['username'];
+                                $nomer_invoice = $transaksi['nomor_invoice'];
+                                $jumlah_beli = $transaksi['jumlah_beli'];
+                                $subtotal = $transaksi['subtotal'];
+                                $status_penjualan = $transaksi['status_penjualan'];
+                                include '../components/card-transaksi-hari-ini.php';
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
 
@@ -163,37 +135,20 @@
                     <!-- Stok Warning List -->
                     <div class="space-y-3">
                         <!-- Item 1 -->
-                        <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-medium text-gray-800">Kopi Robusta</p>
-                                    <p class="text-sm text-gray-500">Minuman</p>
-                                </div>
-                                <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">35 tersisa</span>
-                            </div>
-                        </div>
+                        <?php
+                        $produkHampirHabis = getProdukHampirHabis();
+                        if (empty($produkHampirHabis)) {
+                            echo '<p class="text-gray-500 text-center text-sm">Tidak ada produk yang hampir habis.</p>';
+                        } else {
+                            foreach ($produkHampirHabis as $produk) {
+                                $nama_produk = $produk['nama_produk'];
+                                $kategori = $produk['kategori'];
+                                $stok = $produk['stok'];
+                                include '../components/card-produk-hampir-habis.php';
+                            }
+                        }
+                        ?>
 
-                        <!-- Item 2 -->
-                        <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-medium text-gray-800">Susu Full Cream</p>
-                                    <p class="text-sm text-gray-500">Minuman</p>
-                                </div>
-                                <span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">30 tersisa</span>
-                            </div>
-                        </div>
-
-                        <!-- Item 3 -->
-                        <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-medium text-gray-800">Mentega</p>
-                                    <p class="text-sm text-gray-500">Bahan Kue</p>
-                                </div>
-                                <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">50 tersisa</span>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Restock Button -->
@@ -204,6 +159,28 @@
                 </div>
             </div>
 
+            <div class="bg-white rounded-xl p-6 shadow-md flex flex-col">
+                <div class="flex gap-3 items-center">
+                    <i class="fa-solid fa-cubes-stacked text-2xl bg-gradient-to-br p-2 rounded-lg from-red-500 to-orange-700 text-white"></i>
+                    <p class="text-3xl font-semibold">Ringkasan Sistem</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+                    <div class="flex flex-col justify-center items-center p-5">
+                        <p class="text-4xl font-bold text-blue-700">
+                            <?= getTotalPruduk() ?>
+                        </p>
+                        <p class="text-lg font-semibold text-gray-500">Total Produk</p>
+                    </div>
+                    <div class="flex flex-col justify-center items-center p-5">
+                        <p class="text-4xl font-bold text-purple-700"><?= getTotalPelanggan() ?></p>
+                        <p class="text-lg font-semibold text-gray-500">Total Pelanggan</p>
+                    </div>
+                    <div class="flex flex-col justify-center items-center p-5">
+                        <p class="text-4xl font-bold text-green-600"><?= getTotalPenggunaAktif() ?></p>
+                        <p class="text-lg font-semibold text-gray-500">Pengguna Aktif</p>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 </body>
