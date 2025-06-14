@@ -2,6 +2,7 @@
 require '../handler/dashboard_handler.php';
 require '../utils/produk_util.php';
 require '../utils/penjualan_util.php';
+require '../utils/detail_penjualan_util.php';
 require '../utils/pengguna_util.php';
 require '../utils/pelanggan_util.php';
 require '../utils/tools_util.php';
@@ -113,8 +114,8 @@ require '../utils/tools_util.php';
                             echo '<p class="text-gray-500 text-center text-sm">Tidak ada transaksi hari ini.</p>';
                         } else {
                             foreach ($transaksiHariIni as $transaksi) {
-                                $username = $transaksi['username'];
-                                $nomer_invoice = $transaksi['nomor_invoice'];
+                                $username = $transaksi['nama_lengkap'];
+                                $nomor_invoice = $transaksi['nomor_invoice'];
                                 $jumlah_beli = $transaksi['jumlah_beli'];
                                 $subtotal = $transaksi['subtotal'];
                                 $status_penjualan = $transaksi['status_penjualan'];
