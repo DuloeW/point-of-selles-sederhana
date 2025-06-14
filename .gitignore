@@ -1,10 +1,9 @@
 node_modules/
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.bmp
-*.svg
-*.webp
-uploads/
+uploads/*.png
+uploads/*.jpg
+uploads/*.jpeg
+uploads/*.gif
+uploads/*.bmp
+uploads/*.svg
+uploads/*.webp
 assets/output.css
