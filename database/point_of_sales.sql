@@ -18,6 +18,7 @@ CREATE TABLE produk (
     tanggal_diperbarui DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status_produk ENUM('Aktif', 'Tidak Aktif') NOT NULL DEFAULT 'Aktif'
 );
+    
 
 -- Tabel pengguna
 CREATE TABLE pengguna (
@@ -47,6 +48,20 @@ CREATE TABLE member (
     poin INT NOT NULL DEFAULT 0,
     FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
 );
+
+CREATE TABLE keranjang (
+    id_keranjang INT PRIMARY KEY AUTO_INCREMENT,
+    id_pengguna INT NOT NULL,
+    id_pelanggan INT,
+    id_produk INT NOT NULL,
+    jumlah INT NOT NULL DEFAULT 1,
+    harga_saat_ini DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    subtotal DECIMAL(10,2) AS (jumlah * harga_saat_ini) STORED,
+    tanggal_ditambahkan DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),
+    FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan),
+    FOREIGN KEY (id_produk) REFERENCES produk(id_produk)
+);  
 
 -- Tabel penjualan
 CREATE TABLE penjualan (
@@ -109,9 +124,9 @@ VALUES
 -- Insert pengguna
 INSERT INTO pengguna (username, password, nama_lengkap, role, status)
 VALUES
-('admin', MD5('admin123'), 'Admin Utama', 'Admin', 'Active'),
-('kasir1', MD5('kasir123'), 'Kasir A', 'Kasir', 'Active'),
-('kasir2', MD5('kasir456'), 'Kasir B', 'Kasir', 'Active');
+('admin', 'admin123', 'Admin Utama', 'Admin', 'Active'),
+('kasir1', 'kasir123', 'Kasir A', 'Kasir', 'Active'),
+('kasir2', 'kasir456', 'Kasir B', 'Kasir', 'Active');
 
 -- Insert pelanggan
 INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
