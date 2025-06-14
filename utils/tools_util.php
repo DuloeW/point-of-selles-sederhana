@@ -25,5 +25,13 @@ function getFormattedTime() {
     return date('H.i');
 }
 
+function cariProdukByKode($kode_produk) {
+    global $koneksi;
+    $kode_produk = mysqli_real_escape_string($koneksi, $kode_produk);
+    $query = "SELECT * FROM produk WHERE kode_produk = '$kode_produk'";
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_assoc($result) : null;
+}
+
 
 ?>

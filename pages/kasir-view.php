@@ -17,7 +17,7 @@ require '../utils/keranjang_util.php';
 
   <!-- Header -->
   <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow">
-    <h1 class="text-2xl font-bold">Point of Sales</h1>
+    <img src="" alt="">
     <div class="flex items-center gap-4">
       <span class="text-sm">Online</span>
       <div class="w-3 h-3 bg-green-400 rounded-full"></div>
@@ -29,26 +29,20 @@ require '../utils/keranjang_util.php';
     <!-- Katalog Produk -->
     <div class="col-span-2">
       <!-- Info Panel -->
-      <div class="grid grid-cols-3 gap-4 mb-4">
+      <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white p-4 rounded-xl shadow">
           <h2 class="text-sm">Total Produk</h2>
-          <p class="text-2xl font-bold"><?= getTotalPruduk()?></p>
+          <p class="text-4xl font-bold"><?= getTotalPruduk()?></p>
         </div>
-        <div class="bg-gradient-to-r from-green-400 to-green-600 text-white p-4 rounded-xl shadow">
-          <h2 class="text-sm">Item di Keranjang</h2>
-          <p class="text-2xl font-bold"><?= getKeranjang()?></p>
         </div>
-        <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-xl shadow">
-          <h2 class="text-sm">Total Keranjang</h2>
-          <p class="text-2xl font-bold">Rp 30.000</p>
-        </div>
-      </div>
 
       <!-- Filter dan Pencarian -->
       <div class="flex gap-2 mb-4">
-        <input type="text" placeholder="Cari produk..."
+        <form action="">
+          <input type="text" placeholder="Cari produk..."
           class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
         <button class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl">Scan Barcode</button>
+        </form>
       </div>
 
       <!-- Kategori -->
