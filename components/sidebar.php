@@ -1,10 +1,10 @@
 <!-- TODO responsive belum -->
 <div class="w-64 h-screen bg-gray-50 shadow-lg flex flex-col">
     <!-- Header -->
-    <div class="h-16 flex items-center justify-center bg-gradient-to-r from-orange-500 to-pink-500 text-white">
+    <div class="h-16 flex items-center justify-center text-purple-900 border-b border-purple-300/30">
         <div class="flex items-center justify-center gap-3">
-            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                <i class="fa-solid fa-store text-orange-500"></i>
+            <div class="w-8 h-8 bg-gradient-to-br from-purple-800 to-blue-700 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-store text-white"></i>
             </div>
             <div>
                 <h1 class="font-bold text-lg">Shopping Mart</h1>
@@ -17,7 +17,7 @@
     <div class="flex-1 p-4 mt-4 space-y-2">
         <!-- POS - Active -->
         <a href="" class="block">
-            <div class="flex items-center justify-between p-3 bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg text-white">
+            <div class="flex items-center rounded-lg justify-between p-3 bg-purple-700 text-white">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-chart-line"></i>
                     <span class="font-medium">Dasboard</span>
