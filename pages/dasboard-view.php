@@ -21,7 +21,10 @@ require '../utils/tools_util.php';
 </head>
 
 <body class="flex w-full h-screen bg-gray-100">
-    <?php include '../components/sidebar.php' ?>
+    <?php
+        $active = 1; // Set active menu item for Dasboard
+        include '../components/sidebar.php'
+    ?>
     <div class="flex-1 flex flex-col gap-3">
         <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
             <!-- header -->
