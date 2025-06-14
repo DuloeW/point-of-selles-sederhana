@@ -19,7 +19,7 @@ if ($cek > 0) {
     if ($role == "Admin") {
         header("location: ../pages/dasboard-view.php");
     } else {
-        header("location: ../index.php");
+        header("location: ../pages/kasir-view.php");
     }
 } else {
     header("location: ../pages/login-view.php?pesan=gagal-user");

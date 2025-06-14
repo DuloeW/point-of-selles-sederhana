@@ -1,3 +1,10 @@
+<?php
+require '../utils/produk_util.php';
+require '../utils/keranjang_util.php';
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -25,11 +32,11 @@
       <div class="grid grid-cols-3 gap-4 mb-4">
         <div class="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white p-4 rounded-xl shadow">
           <h2 class="text-sm">Total Produk</h2>
-          <p class="text-2xl font-bold">8</p>
+          <p class="text-2xl font-bold"><?= getTotalPruduk()?></p>
         </div>
         <div class="bg-gradient-to-r from-green-400 to-green-600 text-white p-4 rounded-xl shadow">
           <h2 class="text-sm">Item di Keranjang</h2>
-          <p class="text-2xl font-bold">1</p>
+          <p class="text-2xl font-bold"><?= getKeranjang()?></p>
         </div>
         <div class="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-xl shadow">
           <h2 class="text-sm">Total Keranjang</h2>
