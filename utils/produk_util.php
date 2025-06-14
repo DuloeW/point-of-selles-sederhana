@@ -16,7 +16,26 @@ function getProdukHampirHabis() {
     return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
 }
 
+function filterProdukByKategori($kategori) {
+    global $koneksi;
+    $kategori = mysqli_real_escape_string($koneksi, $kategori);
 
+    if ($kategori === 'Semua') {
+        $query = "SELECT * FROM produk ORDER BY nama_produk ASC";
+    } else {
+        $query = "SELECT * FROM produk WHERE kategori = '$kategori' ORDER BY nama_produk ASC";
+    }
 
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+}
+
+function getProdukById($id) {
+    global $koneksi;
+    $stmt = $koneksi->prepare("SELECT * FROM produk WHERE id_produk = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
 
 ?>
