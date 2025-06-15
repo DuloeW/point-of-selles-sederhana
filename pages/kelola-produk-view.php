@@ -1,5 +1,11 @@
 <?php
 require '../utils/tools_util.php';
+require '../utils/produk_util.php';
+
+$kategori_aktif = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
+$kode_produk = isset($_GET['kode_produk']) ? $_GET['kode_produk'] : '';
+
+$produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk);
 
 ?>
 
@@ -54,7 +60,7 @@ require '../utils/tools_util.php';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-blue-100 text-sm font-medium">Total Produk</p>
-                            <p class="text-3xl font-bold text-blue-100 mt-1">10</p>
+                            <p class="text-3xl font-bold text-blue-100 mt-1"><?= getTotalPruduk() ?></p>
                             <p class="text-blue-100 text-sm mt-1">Item berbeda</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-lg">
@@ -68,7 +74,7 @@ require '../utils/tools_util.php';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-red-100 text-sm font-medium">Stok Habis</p>
-                            <p class="text-3xl font-bold text-red-100 mt-1">0</p>
+                            <p class="text-3xl font-bold text-red-100 mt-1"><?= getTotalProdukHabis() ?></p>
                             <p class="text-red-100 text-sm mt-1">Perlu restock</p>
                         </div>
                         <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shadow-lg">
@@ -82,8 +88,8 @@ require '../utils/tools_util.php';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-yellow-100 text-sm font-medium">Stok Sedikit</p>
-                            <p class="text-3xl font-bold text-yellow-100 mt-1">0</p>
-                            <p class="text-yellow-100 text-sm mt-1">≤ 10 unit</p>
+                            <p class="text-3xl font-bold text-yellow-100 mt-1"><?= getTotalProdukHampirHabis() ?></>
+                            <p class="text-yellow-100 text-sm mt-1">≤ 20 unit</p>
                         </div>
                         <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center shadow-lg">
                             <i class="fa-solid fa-exclamation-triangle text-yellow-600 text-xl"></i>
@@ -95,7 +101,7 @@ require '../utils/tools_util.php';
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-green-100 text-sm font-medium">Produk Aktif</p>
-                            <p class="text-3xl font-bold text-green-100 mt-1">0</p>
+                            <p class="text-3xl font-bold text-green-100 mt-1"><?= getTotalProdukAktif() ?></p>
                             <p class="text-green-100 text-sm mt-1">Produk Aktif</p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center shadow-lg">
@@ -104,45 +110,62 @@ require '../utils/tools_util.php';
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Search and Filter Section -->
+            </div> <!-- Search and Filter Section -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
-                <div class="flex flex-col lg:flex-row gap-4 items-center">
-                    <!-- Search Bar -->
-                    <div class="flex-1 relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-search text-gray-400"></i>
+                <form action="" method="GET">
+                    <!-- Hidden input untuk mempertahankan kategori yang aktif -->
+                    <?php if (isset($_GET['kategori']) && $_GET['kategori'] !== 'Semua'): ?>
+                        <input type="hidden" name="kategori" value="<?= htmlspecialchars($_GET['kategori']) ?>">
+                    <?php endif; ?>
+
+                    <div class="flex flex-col lg:flex-row gap-4 items-center">
+                        <!-- Search Bar -->
+                        <div class="flex-1 relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-search text-gray-400"></i>
+                            </div>
+                            <input
+                                type="text"
+                                name="kode_produk"
+                                value="<?= isset($_GET['kode_produk']) ? htmlspecialchars($_GET['kode_produk']) : '' ?>"
+                                placeholder="Cari produk berdasarkan kode produk"
+                                class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors">
                         </div>
-                        <input
-                            type="text"
-                            placeholder="Cari produk berdasarkan nama, kode, atau kategori..."
-                            class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-colors">
+
+                        <!-- Filter Button -->
+                        <button type="submit" class="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fa-solid fa-search text-gray-500"></i>
+                            <span class="text-gray-600">Cari</span>
+                        </button>
                     </div>
-
-                    <!-- Filter Button -->
-                    <button class="flex items-center gap-2 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        <i class="fa-solid fa-filter text-gray-500"></i>
-                        <span class="text-gray-600">Filter</span>
-                    </button>
-                </div>
-
-                <!-- Category Filter Pills -->
+                </form> <!-- Category Filter Pills -->
                 <?php
                 // Ambil kategori aktif dari URL (misalnya ?kategori=Minuman)
                 $kategori_aktif = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 
-                $kategori_list = ['Semua', 'Minuman', 'Bahan Pokok', 'Kebutuhan Harian', 'Makanan Instan', 'Snack'];
+                // Fungsi untuk membangun URL dengan parameter yang sudah ada
+                function buildUrlWithParams($newKategori)
+                {
+                    $params = $_GET; // Ambil semua parameter yang ada
+                    $params['kategori'] = $newKategori; // Update kategori
+                    return '?' . http_build_query($params);
+                }
+
+                $data = getAllKategoriProduk(); // Ambil daftar kategori dari fungsi util
                 ?>
 
                 <div class="flex flex-wrap gap-3 mt-4 pt-4 border-t border-gray-100">
-                    <?php foreach ($kategori_list as $kategori) :
-                        $isActive = $kategori === $kategori_aktif;
+                    <a href="<?= buildUrlWithParams('Semua') ?>"
+                        class="category-filter px-4 py-2 <?= $kategori_aktif === 'Semua' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?> rounded-full text-sm font-medium transition-colors">
+                        Semua
+                    </a>
+                    <?php foreach ($data as $d) :
+                        $isActive = $d['kategori'] === $kategori_aktif;
                         $bgClass = $isActive ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200';
                     ?>
-                        <a href="?kategori=<?= urlencode($kategori) ?>"
+                        <a href="<?= buildUrlWithParams($d['kategori']) ?>"
                             class="category-filter px-4 py-2 <?= $bgClass ?> rounded-full text-sm font-medium transition-colors">
-                            <?= $kategori ?>
+                            <?= $d['kategori'] ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
@@ -153,7 +176,7 @@ require '../utils/tools_util.php';
                 <!-- Table Header -->
                 <div class="p-6 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800">Daftar Produk</h2>
-                    <p class="text-gray-500 text-sm mt-1">Menampilkan 6 dari 6 produk</p>
+                    <p class="text-gray-500 text-sm mt-1">Menampilkan <?= count($produkList) ?> dari <?= getTotalPruduk() ?> produk</p>
                 </div>
 
                 <!-- Table -->
@@ -171,106 +194,42 @@ require '../utils/tools_util.php';
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <!-- Row 1 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD001</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Kopi Arabika</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Minuman</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp 25,000</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">50</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Aktif</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 2 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD002</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Teh Hijau</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Minuman</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp 15,000</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">40</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Aktif</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 3 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD003</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Susu Full Cream</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Minuman</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp 18,000</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">30</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Aktif</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 4 -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">PRD004</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Gula Pasir</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">Bahan Pokok</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp 12,000</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">100</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">Aktif</span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <div class="flex gap-2">
-                                        <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
-                                            <i class="fa-solid fa-edit"></i>
-                                        </button>
-                                        <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                            <?php if (!empty($produkList)): ?>
+                                <?php foreach ($produkList as $produk): ?>
+                                    <!-- Row 1 -->
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= $produk['kode_produk'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><?= $produk['nama_produk'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= $produk['kategori'] ?></span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp <?= number_format($produk['harga_jual'], 0, '.', ',') ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-red-800 font-bold' ?> "><?= $produk['stok'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-3 py-1 text-xs font-medium <?= $produk['status_produk'] == 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>  rounded-full"><?= $produk['status_produk'] ?></span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <div class="flex gap-2">
+                                                <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
+                                                    <i class="fa-solid fa-edit"></i>
+                                                </button>
+                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada produk ditemukan</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-            
+
 
         </main>
     </div>

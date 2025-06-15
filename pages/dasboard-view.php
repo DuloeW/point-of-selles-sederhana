@@ -140,7 +140,7 @@ require '../utils/tools_util.php';
                     <div class="space-y-3">
                         <!-- Item 1 -->
                         <?php
-                        $produkHampirHabis = getProdukHampirHabis();
+                        $produkHampirHabis = getProdukAktifHampirHabis();
                         if (empty($produkHampirHabis)) {
                             echo '<p class="text-gray-500 text-center text-sm">Tidak ada produk yang hampir habis.</p>';
                         } else {
