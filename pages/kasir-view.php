@@ -8,7 +8,22 @@
   $queryKategori = "SELECT DISTINCT kategori FROM produk WHERE kategori IS NOT NULL AND kategori != ''";
   $resultKategori = $koneksi->query($queryKategori);
 
+  if (isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
+  $keyword = $koneksi->real_escape_string($_GET['keyword']);
+  $produkList = [];
+
+  $query = "SELECT * FROM produk 
+            WHERE kode_produk LIKE '%$keyword%' 
+               OR nama_produk LIKE '%$keyword%'
+               OR kategori LIKE '%$keyword%'";
+
+  $result = mysqli_query($koneksi, $query);
+  while ($row = mysqli_fetch_assoc($result)) {
+    $produkList[] = $row;
+  }
+} else {
   $produkList = filterProdukByKategori($kategoriDipilih);
+}
 
   $queryPelanggan = "SELECT pelanggan.id_pelanggan, pelanggan.nama_lengkap, member.level_member 
                    FROM pelanggan 
@@ -19,6 +34,11 @@
   if (!isset($_SESSION['keranjang'])) {
     $_SESSION['keranjang'] = [];
   }
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan'])) {
+  $_SESSION['id_pelanggan'] = $_POST['id_pelanggan'];
+}
+
 
   // Menambahkan produk ke keranjang
   if (isset($_GET['tambah'])) {
@@ -102,10 +122,11 @@ if (
       <div class="flex items-center gap-4">
         <span class="text-sm">Online</span>
         <div class="w-3 h-3 bg-green-400 rounded-full"></div>
-        <a href="../pages/logout.php"
-          class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-4 py-1 rounded inline-block">
-          Keluar
-        </a>
+        <button 
+  onclick="confirmLogout()" 
+  class="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-4 py-1 rounded">
+  Keluar
+</button>
 
       </div>
     </div>
@@ -126,12 +147,15 @@ if (
           <form action="" class="flex w-full gap-2">
             <input
               type="text"
-              placeholder="Cari produk..."
+              name="keyword"
+              placeholder="Cari kode produk..."
+              value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>"
               class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-            <button
-              class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl whitespace-nowrap">
-              Scan Barcode
-            </button>
+            <button 
+    type="submit"
+    class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-800 text-white px-4 py-2 rounded-xl whitespace-nowrap">
+    Cari
+  </button>
           </form>
         </div>
 
@@ -198,25 +222,32 @@ if (
       <!-- TODO BUAT TAMPILAN KERANJANG KOSONG -->
 
       <!-- Keranjang -->
-      <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 py-3">
-          <h2 class="text-lg font-bold">Keranjang Belanja</h2>
-        </div>
+      <div class="bg-white rounded-xl shadow-md flex flex-col">
+  <!-- Header -->
+  <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 py-3">
+    <h2 class="text-lg font-bold">Keranjang Belanja</h2>
+  </div>
 
           <!-- Pilih Pelanggan -->
            <form method="POST" action="" class="p-4">
           <div class="mb-4">
             <label class="block mb-1 text-sm text-gray-700">Pilih Pelanggan</label>
             <?php $resultPelanggan = mysqli_query($koneksi, "SELECT p.id_pelanggan, p.nama_lengkap, m.level_member FROM pelanggan p LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan"); ?>
-           <select name="id_pelanggan" class="select-member w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
-  <option value="umum" data-level="umum">Pelanggan Umum</option>
+<select name="id_pelanggan" class="select-member w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" onchange="this.form.submit()">
+  <option value="umum" data-level="umum" 
+<?= (!isset($_SESSION['id_pelanggan']) || $_SESSION['id_pelanggan'] === 'umum') ? 'selected' : '' ?>>
+  Pelanggan Umum
+</option>
   <?php while ($row = $resultPelanggan->fetch_assoc()): ?>
     <?php
     $nama = htmlspecialchars($row['nama_lengkap']);
     $level = $row['level_member'] ?? 'none';
     $label = $level !== 'none' ? "$nama ($level)" : $nama;
     ?>
-    <option value="<?= $row['id_pelanggan'] ?>" data-level="<?= strtolower($level) ?>"><?= $label ?></option>
+    <option value="<?= $row['id_pelanggan'] ?>" data-level="<?= strtolower($level) ?>" 
+<?= (isset($_SESSION['id_pelanggan']) && $_SESSION['id_pelanggan'] == $row['id_pelanggan']) ? 'selected' : '' ?>>
+  <?= $label ?>
+</option>
   <?php endwhile; ?>
 </select>
 
@@ -224,7 +255,7 @@ if (
             
 
 
-           <button id="openModalBtn" class="w-full mt-2 inline-flex justify-center items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:from-purple-600 hover:to-indigo-700 transition">
+           <button type="button" id="openModalBtn" class="w-full mt-2 inline-flex justify-center items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:from-purple-600 hover:to-indigo-700 transition">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
   </svg>
@@ -275,17 +306,19 @@ else:
   </div>
 <?php endif; ?>
 
-<?php
-// ⬇️ Perhitungan diskon dilakukan SETELAH subtotal diketahui
-$diskonPersen = 0;
-$diskon = 0;
-$totalAkhir = $subtotal;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan']) && $_POST['id_pelanggan'] !== 'umum') {
-  $id_pelanggan = $_POST['id_pelanggan'];
-  $query = mysqli_query($koneksi, "SELECT m.level_member, d.persentase_diskon 
-                                   FROM member m 
-                                   JOIN diskon_member d ON m.level_member = d.level_member 
+
+<?php if (!empty($_SESSION['keranjang'])): ?>
+  <?php
+  $diskonPersen = 0;
+  $diskon = 0;
+  $totalAkhir = $subtotal;
+
+$id_pelanggan = $_SESSION['id_pelanggan'] ?? 'umum';
+if ($id_pelanggan !== 'umum') {
+  $query = mysqli_query($koneksi, "SELECT m.level_member, d.persentase_diskon
+                                   FROM member m
+                                   JOIN diskon_member d ON m.level_member = d.level_member
                                    WHERE m.id_pelanggan = $id_pelanggan");
 
   if ($row = mysqli_fetch_assoc($query)) {
@@ -295,33 +328,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan']) && $_
   }
 }
 
-?>
+  ?>
 
-<?php if ($diskonPersen > 0): ?>
-  <div class="bg-yellow-100 text-yellow-800 p-3 rounded mb-2">
-    <p><strong>Diskon Member (<?= $diskonPersen ?>%)</strong></p>
-    <p>Rp <?= number_format($diskon, 0, ',', '.') ?></p>
-  </div>
+  <?php if ($diskonPersen > 0): ?>
+    <div class="bg-yellow-100 text-yellow-800 p-3 rounded mb-2">
+      <p><strong>Diskon Member (<?= $diskonPersen ?>%)</strong></p>
+      <p>Rp <?= number_format($diskon, 0, ',', '.') ?></p>
+    </div>
+    
+      <div class="bg-gray-100 p-3 rounded">
+      <p class="text-sm text-gray-600">Subtotal:</p>
+      <p class="text-xl font-bold text-black">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+    </div>
+  <?php endif; ?>
 
-  <div class="bg-gray-100 p-3 rounded">
-    <p class="text-sm text-gray-600">Subtotal (setelah diskon):</p>
-    <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
-  </div>
-<?php else: ?>
-  <!-- Jika bukan member -->
-  <div class="bg-gray-100 p-3 rounded">
-    <p class="text-sm text-gray-600">Subtotal:</p>
-    <p class="text-xl font-bold text-black">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
-  </div>
+    <div class="bg-gray-100 p-3 rounded">
+      <p class="text-sm text-gray-600">Subtotal (akhir):</p>
+      <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
+    </div>
+  <?php else: ?>
+
+
+  
 <?php endif; ?>
 
-
-<div class="bg-gray-100 p-3 rounded-lg mt-2">
-  <p class="text-sm text-gray-600">Subtotal (setelah diskon):</p>
-  <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
-</div>
-
           <!-- Pembayaran -->
+           
           <!-- Metode Pembayaran -->
           <div class="mb-4">
             <label for="metode" class="block text-sm font-semibold text-gray-700 mb-1">
@@ -380,7 +412,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan']) && $_
     </script>
     <script>
       $(document).ready(function() {
-        $('#select-member').select2({
+        $('.select-member').select2({
           templateResult: function(data) {
             if (!data.id) return data.text;
 
@@ -532,9 +564,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan']) && $_
 
 <!-- Script -->
 <script>
-  const modal = document.getElementById("modalMember");
+ document.addEventListener("DOMContentLoaded", function () {
   const openBtn = document.getElementById("openModalBtn");
+  const modal = document.getElementById("modalMember");
   const closeBtn = document.getElementById("closeModalBtn");
+
+  openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+  closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+});
 
  const tabs = {
   Bronze: {
@@ -602,6 +639,16 @@ function updateCard(level) {
   // Init with Gold by default
   updateCard("Gold");
 </script>
+
+<!-- logout -->
+<script>
+  function confirmLogout() {
+    if (confirm("Apakah Anda yakin ingin keluar?")) {
+      window.location.href = "../pages/logout.php";
+    }
+  }
+</script>
+
 
   </body>
 
