@@ -60,17 +60,16 @@ require '../utils/tools_util.php';
                         'suffix' => 'Transaksi',
                         'color' => 'blue',
                         'icon' => 'fa-regular fa-calendar-check' // Ganti sesuai icon yang kamu pakai
-                    ],
-                    [
+                    ],                    [
                         'title' => 'Pendapatan Hari Ini',
-                        'value' => 'Rp ' . getPendapatanHariIni(),
-                        'subtext' => 'Rp ' . getPendapatanHariIni(),
+                        'value' => 'Rp ' . number_format(getPendapatanHariIni() ?? 0, 0, ',', '.'),
+                        'subtext' => 'Rp ' . number_format(getPendapatanHariIni() ?? 0, 0, ',', '.'),
                         'color' => 'green',
                         'icon' => 'fa-solid fa-money-bill-wave'
                     ],
                     [
                         'title' => 'Rata-rata Transaksi',
-                        'value' => 'Rp ' . number_format(getRataRataTransaksi(), 0, ',', '.'),
+                        'value' => 'Rp ' . number_format(getRataRataTransaksi() ?? 0, 0, ',', '.'),
                         'suffix' => 'Per transaksi',
                         'color' => 'purple',
                         'icon' => 'fa-solid fa-money-bill-wave'
@@ -116,8 +115,7 @@ require '../utils/tools_util.php';
                             foreach ($transaksiHariIni as $transaksi) {
                                 $username = $transaksi['nama_lengkap'];
                                 $nomor_invoice = $transaksi['nomor_invoice'];
-                                $jumlah_beli = $transaksi['jumlah_beli'];
-                                $subtotal = $transaksi['subtotal'];
+                                $subtotal = $transaksi['total_bayar'];
                                 $status_penjualan = $transaksi['status_penjualan'];
                                 include '../components/card-transaksi-hari-ini.php';
                             }

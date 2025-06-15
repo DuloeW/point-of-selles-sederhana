@@ -46,69 +46,60 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                     <p class="mt-1 text-xl font-semibold text-purple-100">Kelola inventori dan produk toko Anda</p>
                 </div>
                 <div>
-                    <div class="flex items-center gap-5 px-5 py-3 rounded-lg bg-white text-emerald-600">
-                        <i class="fa-solid fa-plus"></i>
-                        <p>Tambah Produk</p>
-                    </div>
+                    <a href="tambah-produk-view.php">
+                        <div class="flex items-center gap-5 px-5 py-3 rounded-lg bg-white text-purple-600">
+                            <i class="fa-solid fa-plus"></i>
+                            <p>Tambah Produk</p>
+                        </div>
+                    </a>
                 </div>
             </div>
 
             <!-- Product Statistics Cards -->
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-                <!-- Total Produk -->
-                <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 shadow-md">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-blue-100 text-sm font-medium">Total Produk</p>
-                            <p class="text-3xl font-bold text-blue-100 mt-1"><?= getTotalPruduk() ?></p>
-                            <p class="text-blue-100 text-sm mt-1">Item berbeda</p>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-box text-blue-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+                <?php
+                $dashboardData = [
+                    [
+                        'title' => 'Total Produk',
+                        'value' => getTotalPruduk(),
+                        'suffix' => 'Item berbeda',
+                        'color' => 'blue',
+                        'icon' => 'fa-solid fa-box' // Ganti sesuai icon yang kamu pakai
+                    ],
+                    [
+                        'title' => 'Stok Habis',
+                        'value' => getTotalProdukHabis(),
+                        'suffix' => 'Perlu restock',
+                        'color' => 'red',
+                        'icon' => 'fa-solid fa-triangle-exclamation'
+                    ],
+                    [
+                        'title' => 'Stok Sedikit',
+                        'value' => getTotalProdukHampirHabis(),
+                        'suffix' => '≤ 20 unit',
+                        'color' => 'yellow',
+                        'icon' => 'fa-solid fa-exclamation-triangle'
+                    ],
+                    [
+                        'title' => 'Produk Aktif',
+                        'value' => getTotalProdukAktif(),
+                        'suffix' => 'Produk Aktif',
+                        'color' => 'green',
+                        'icon' => 'fa-solid fa-check'
+                    ]
+                ];
 
-                <!-- Stok Habis -->
-                <div class="bg-gradient-to-br from-red-500 to-red-700 rounded-xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-red-100 text-sm font-medium">Stok Habis</p>
-                            <p class="text-3xl font-bold text-red-100 mt-1"><?= getTotalProdukHabis() ?></p>
-                            <p class="text-red-100 text-sm mt-1">Perlu restock</p>
-                        </div>
-                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-triangle-exclamation text-red-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+                foreach ($dashboardData as $data) {
+                    $title = $data['title'];
+                    $value = $data['value'];
+                    $suffix = isset($data['suffix']) ? $data['suffix'] : '';
+                    $color = $data['color'];
+                    $icon = $data['icon'];
 
-                <!-- Stok Sedikit -->
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-700 rounded-xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-yellow-100 text-sm font-medium">Stok Sedikit</p>
-                            <p class="text-3xl font-bold text-yellow-100 mt-1"><?= getTotalProdukHampirHabis() ?></>
-                            <p class="text-yellow-100 text-sm mt-1">≤ 20 unit</p>
-                        </div>
-                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-exclamation-triangle text-yellow-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+                    include '../components/card-informasi-kelola-produk.php';
+                }
 
-                <div class="bg-gradient-to-br from-green-500 to-green-700 rounded-xl p-6 shadow-sm">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-green-100 text-sm font-medium">Produk Aktif</p>
-                            <p class="text-3xl font-bold text-green-100 mt-1"><?= getTotalProdukAktif() ?></p>
-                            <p class="text-green-100 text-sm mt-1">Produk Aktif</p>
-                        </div>
-                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-check text-green-600 text-xl"></i>
-                        </div>
-                    </div>
-                </div>
+                ?>
 
             </div> <!-- Search and Filter Section -->
             <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-6">
@@ -142,14 +133,6 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                 <?php
                 // Ambil kategori aktif dari URL (misalnya ?kategori=Minuman)
                 $kategori_aktif = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
-
-                // Fungsi untuk membangun URL dengan parameter yang sudah ada
-                function buildUrlWithParams($newKategori)
-                {
-                    $params = $_GET; // Ambil semua parameter yang ada
-                    $params['kategori'] = $newKategori; // Update kategori
-                    return '?' . http_build_query($params);
-                }
 
                 $data = getAllKategoriProduk(); // Ambil daftar kategori dari fungsi util
                 ?>
@@ -204,18 +187,26 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                                             <span class="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full"><?= $produk['kategori'] ?></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp <?= number_format($produk['harga_jual'], 0, '.', ',') ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-red-800 font-bold' ?> "><?= $produk['stok'] ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                            <p class="px-3 py-1 rounded-full <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-red-800 bg-red-100' ?> ">
+                                                <?= $produk['stok'] ?>
+                                            </p>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <span class="px-3 py-1 text-xs font-medium <?= $produk['status_produk'] == 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>  rounded-full"><?= $produk['status_produk'] ?></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             <div class="flex gap-2">
-                                                <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
-                                                    <i class="fa-solid fa-edit"></i>
-                                                </button>
-                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                                    <i class="fa-solid fa-trash"></i>
-                                                </button>
+                                                <a href="edit-produk-view.php?id_produk=<?= $produk['id_produk'] ?>">
+                                                    <div class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
+                                                        <i class="fa-solid fa-edit"></i>
+                                                    </div>
+                                                </a>
+                                                <a href="">
+                                                    <div class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                    </div>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

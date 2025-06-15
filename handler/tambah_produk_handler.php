@@ -58,7 +58,7 @@ if(isset($_FILES["foto_produk"]) && $_FILES["foto_produk"]["error"] == 0) {
 // Simpan data ke database
 mysqli_query($koneksi, "INSERT INTO produk (kode_produk, nama_produk, deskripsi, harga_jual, stok, satuan, kategori, foto_produk, tanggal_dibuat, tanggal_diperbarui) VALUES ('$kode_produk', '$nama_produk', '$deskripsi', '$harga_jual', '$stok', '$satuan', '$kategori', '$foto_produk', '$tanggal_dibuat', '$tanggal_diperbarui')");
 
-header("location:../pages/list-produk-view.php");
+header("location:../pages/kelola-produk-view.php");
 
 
 ?>
