@@ -133,16 +133,14 @@ INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
 VALUES
 ('Andi Wijaya', '081234567891', 'Jl. Merdeka 1', 'andi@mail.com'),
 ('Sari Dewi', '081234567892', 'Jl. Sudirman 2', 'sari@mail.com'),
-('Budi Hartono', '081234567893', 'Jl. Gajah Mada 3', 'budi@mail.com'),
-('Rina Kurnia', '081234567894', 'Jl. Pemuda 4', 'rina@mail.com'),
-('Fajar Pratama', '081234567895', 'Jl. Soekarno Hatta 5', 'fajar@mail.com');
+('Budi Hartono', '081234567893', 'Jl. Gajah Mada 3', 'budi@mail.com');
 
 -- Insert member
 INSERT INTO member (id_pelanggan, level_member, poin)
 VALUES
-(1, 'Gold', 500),
-(2, 'Silver', 300),
-(3, 'Bronze', 150);
+(1, 'Gold', 1000),
+(2, 'Silver', 500),
+(3, 'Bronze', 0);
 
 -- Insert diskon_member
 INSERT INTO diskon_member (level_member, persentase_diskon)

@@ -1,6 +1,7 @@
   <?php
   require '../utils/produk_util.php';
   require '../utils/keranjang_util.php';
+  require_once '../utils/pelanggan_util.php'; 
 
   $kategoriDipilih = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 
@@ -51,6 +52,27 @@
     exit;
   }
 
+  // hubungkan pelanggan ke database
+if (
+    $_SERVER['REQUEST_METHOD'] == 'POST' &&
+    isset($_POST['nama_lengkap'], $_POST['telepon'], $_POST['email'], $_POST['alamat'], $_POST['level_member'])
+) {
+    $nama = $_POST['nama_lengkap'];
+    $telepon = $_POST['telepon'];
+    $email = $_POST['email'];
+    $alamat = $_POST['alamat'];
+    $level = $_POST['level_member'];
+
+    $result = tambahMemberBaru($nama, $telepon, $email, $alamat, $level);
+
+    if ($result['success']) {
+        header('Location: ../pages/kasir-view.php?success=member_added');
+        exit;
+    } else {
+        echo "<script>alert('{$result['message']}');</script>";
+    }
+}
+
   ?>
 
 
@@ -67,6 +89,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  
 
   </head>
 
@@ -180,80 +203,123 @@
           <h2 class="text-lg font-bold">Keranjang Belanja</h2>
         </div>
 
-        <div class="p-4">
           <!-- Pilih Pelanggan -->
+           <form method="POST" action="" class="p-4">
           <div class="mb-4">
             <label class="block mb-1 text-sm text-gray-700">Pilih Pelanggan</label>
-            <select id="select-member" name="id_pelanggan" class="select-member w-full">
-              <option value="umum" data-level="umum">Pelanggan Umum</option>
-              <?php while ($row = $resultPelanggan->fetch_assoc()): ?>
-                <?php
-                $nama = htmlspecialchars($row['nama_lengkap']);
-                $level = $row['level_member'] ?? 'none';
-                $label = $level !== 'none' ? "$nama ($level)" : $nama;
-                ?>
-                <option value="<?= $row['id_pelanggan'] ?>" data-level="<?= strtolower($level) ?>"><?= $label ?></option>
-              <?php endwhile; ?>
-            </select>
+            <?php $resultPelanggan = mysqli_query($koneksi, "SELECT p.id_pelanggan, p.nama_lengkap, m.level_member FROM pelanggan p LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan"); ?>
+           <select name="id_pelanggan" class="select-member w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300">
+  <option value="umum" data-level="umum">Pelanggan Umum</option>
+  <?php while ($row = $resultPelanggan->fetch_assoc()): ?>
+    <?php
+    $nama = htmlspecialchars($row['nama_lengkap']);
+    $level = $row['level_member'] ?? 'none';
+    $label = $level !== 'none' ? "$nama ($level)" : $nama;
+    ?>
+    <option value="<?= $row['id_pelanggan'] ?>" data-level="<?= strtolower($level) ?>"><?= $label ?></option>
+  <?php endwhile; ?>
+</select>
 
 
-            <button
-              id="openModalBtn"
-              class="w-full mt-2 inline-flex justify-center items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:from-purple-600 hover:to-indigo-700 transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-              </svg>
-              Tambah Member Baru
-            </button>
+            
+
+
+           <button id="openModalBtn" class="w-full mt-2 inline-flex justify-center items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:from-purple-600 hover:to-indigo-700 transition">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+  </svg>
+  Tambah Member Baru
+</button>
 
 
           </div>
 
           <!-- Item Keranjang -->
-          <?php
-          $subtotal = 0;
+<?php
+$subtotal = 0;
+$diskonPersen = 0;
 
-          if (!empty($_SESSION['keranjang'])):
-            foreach ($_SESSION['keranjang'] as $idProduk => $jumlah):
-              $produk = getProdukById($idProduk); // Buat function ini di utils/produk_util.php
-              $totalHargaItem = $produk['harga_jual'] * $jumlah;
-              $subtotal += $totalHargaItem;
-          ?>
-              <div class="border rounded-lg p-3 mb-4 bg-white shadow-sm">
-                <div class="flex justify-between">
-                  <div>
-                    <p class="font-semibold"><?= $produk['nama_produk']; ?></p>
-                    <p class="text-sm text-gray-500">Rp <?= number_format($produk['harga_jual'], 0, ',', '.'); ?> × <?= $jumlah ?></p>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <a href="?kurang=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">−</a>
-                    <span><?= $jumlah ?></span>
-                    <a href="?tambah=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">+</a>
-                    <a href="?hapus=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 transition">
-                      🗑 <span class="text-xs font-semibold">Hapus</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            <?php
-            endforeach;
-          else:
-            ?>
-            <div class="flex flex-col items-center justify-center text-gray-500 py-12">
-              <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" class="w-24 h-24 mb-4 opacity-70">
-              <p class="text-lg font-semibold">Keranjang masih kosong</p>
-              <p class="text-sm text-gray-400">Silakan pilih produk dari katalog.</p>
-            </div>
+// Hitung subtotal dari keranjang
+if (!empty($_SESSION['keranjang'])):
+  foreach ($_SESSION['keranjang'] as $idProduk => $jumlah):
+    $produk = getProdukById($idProduk); // Fungsi ambil produk by ID
+    $totalItem = $produk['harga_jual'] * $jumlah;
+    $subtotal += $totalItem;
+?>
+    <!-- Tampilkan masing-masing item -->
+    <div class="border rounded-lg p-3 mb-4 bg-white shadow-sm">
+      <div class="flex justify-between">
+        <div>
+          <p class="font-semibold"><?= $produk['nama_produk']; ?></p>
+          <p class="text-sm text-gray-500">Rp <?= number_format($produk['harga_jual'], 0, ',', '.'); ?> × <?= $jumlah ?></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a href="?kurang=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">−</a>
+          <span><?= $jumlah ?></span>
+          <a href="?tambah=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">+</a>
+          <a href="?hapus=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 transition">
+            🗑 <span class="text-xs font-semibold">Hapus</span>
+          </a>
+        </div>
+      </div>
+    </div>
+<?php
+  endforeach;
+else:
+?>
+  <!-- Keranjang kosong -->
+  <div class="flex flex-col items-center justify-center text-gray-500 py-12">
+    <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" class="w-24 h-24 mb-4 opacity-70">
+    <p class="text-lg font-semibold">Keranjang masih kosong</p>
+    <p class="text-sm text-gray-400">Silakan pilih produk dari katalog.</p>
+  </div>
+<?php endif; ?>
 
-          <?php endif; ?>
+<?php
+// ⬇️ Perhitungan diskon dilakukan SETELAH subtotal diketahui
+$diskonPersen = 0;
+$diskon = 0;
+$totalAkhir = $subtotal;
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan']) && $_POST['id_pelanggan'] !== 'umum') {
+  $id_pelanggan = $_POST['id_pelanggan'];
+  $query = mysqli_query($koneksi, "SELECT m.level_member, d.persentase_diskon 
+                                   FROM member m 
+                                   JOIN diskon_member d ON m.level_member = d.level_member 
+                                   WHERE m.id_pelanggan = $id_pelanggan");
+
+  if ($row = mysqli_fetch_assoc($query)) {
+    $diskonPersen = (float)$row['persentase_diskon'];
+    $diskon = $subtotal * ($diskonPersen / 100);
+    $totalAkhir = $subtotal - $diskon;
+  }
+}
+
+?>
+
+<?php if ($diskonPersen > 0): ?>
+  <div class="bg-yellow-100 text-yellow-800 p-3 rounded mb-2">
+    <p><strong>Diskon Member (<?= $diskonPersen ?>%)</strong></p>
+    <p>Rp <?= number_format($diskon, 0, ',', '.') ?></p>
+  </div>
+
+  <div class="bg-gray-100 p-3 rounded">
+    <p class="text-sm text-gray-600">Subtotal (setelah diskon):</p>
+    <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
+  </div>
+<?php else: ?>
+  <!-- Jika bukan member -->
+  <div class="bg-gray-100 p-3 rounded">
+    <p class="text-sm text-gray-600">Subtotal:</p>
+    <p class="text-xl font-bold text-black">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+  </div>
+<?php endif; ?>
 
 
-          <!-- Total -->
-          <div class="mb-4">
-            <p class="text-sm text-gray-600">Subtotal: Rp <?= number_format($subtotal, 0, ',', '.'); ?></p>
-            <p class="text-lg font-bold text-indigo-700">Total: Rp <?= number_format($subtotal, 0, ',', '.'); ?></p>
-          </div>
-
+<div class="bg-gray-100 p-3 rounded-lg mt-2">
+  <p class="text-sm text-gray-600">Subtotal (setelah diskon):</p>
+  <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
+</div>
 
           <!-- Pembayaran -->
           <!-- Metode Pembayaran -->
@@ -289,14 +355,15 @@
 
 
           <button class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-bold">
-            ✓ Proses Pembayaran
+            Proses Pembayaran
           </button>
+          </form>
         </div>
       </div>
     </div>
     <script>
       const inputBayar = document.getElementById("bayar");
-      const totalHarga = <?= $subtotal ?>;
+      const totalHarga = <?= $totalAkhir ?>;
       const kembalianDisplay = document.getElementById("kembalianDisplay");
       const jumlahKembalian = document.getElementById("jumlahKembalian");
 
@@ -398,6 +465,143 @@
       });
     </script>
 
+<!-- Modal Tambah Member Baru -->
+<div id="modalMember" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50">
+  <div class="bg-white w-[800px] rounded-lg shadow-lg p-6 relative">
+    <h2 class="text-xl font-bold text-center mb-1">Pendaftaran Member Baru</h2>
+    <p class="text-center text-sm text-gray-500 mb-4">Daftarkan pelanggan sebagai member untuk mendapatkan berbagai keuntungan</p>
+
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-4 mb-6">
+      <button id="tabBronze" class="px-4 py-2 rounded-md bg-gradient-to-r from-yellow-200 to-yellow-400 text-sm font-semibold">🥉 Bronze</button>
+      <button id="tabSilver" class="px-4 py-2 rounded-md bg-gradient-to-r from-gray-300 to-gray-500 text-sm font-semibold">🥈 Silver</button>
+      <button id="tabGold" class="px-4 py-2 rounded-md bg-gradient-to-r from-yellow-400 to-yellow-600 text-sm font-semibold">🥇 Gold</button>
+    </div>
+
+    <!-- Card Member Info -->
+    <div id="memberCard" class="flex gap-6 mb-6">
+      <div id="cardLevel" class="w-1/3 rounded-lg p-4 text-white bg-gradient-to-br from-yellow-400 to-yellow-600">
+        <div class="text-center">
+          <div class="text-3xl mb-2">🥇</div>
+          <div class="text-lg font-bold">Gold</div>
+          <div class="text-sm">Membership</div>
+          <div class="text-2xl font-semibold mt-4">Rp 300.000<span class="text-sm font-normal">/tahun</span></div>
+          <div class="bg-white text-yellow-600 rounded-full text-xs mt-2 px-2 py-1 inline-block">Diskon 15%</div>
+        </div>
+      </div>
+
+      <div class="w-2/3 text-sm">
+        <h3 class="font-semibold mb-2">Keuntungan Member <span id="levelText">Gold</span></h3>
+        <ul id="benefitList" class="space-y-2 text-gray-700">
+          <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Diskon 15% setiap transaksi</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Form Input -->
+     <form method="POST" action="" class="space-y-4">
+      <input type="hidden" name="level_member" id="inputLevelMember" value="Gold">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="block text-sm font-medium">Nama Lengkap</label>
+            <input type="text" name="nama_lengkap" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="Masukkan nama lengkap">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Nomor Telepon</label>
+            <input type="text" name="telepon" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="Masukkan nomor telepon">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Email</label>
+            <input type="email" name="email" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="Masukkan email">
+          </div>
+          <div>
+            <label class="block text-sm font-medium">Alamat</label>
+            <input type="text" name="alamat" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="Masukkan alamat">
+          </div>
+        </div>
+    
+        <!-- Buttons -->
+         <div class="flex justify-between mt-6">
+        <button type="button" id="closeModalBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Batal</button>
+        <button type="submit" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg">Daftar Member</button>
+      </div>
+    </form>
+      </div>
+    </div>
+      
+
+<!-- Script -->
+<script>
+  const modal = document.getElementById("modalMember");
+  const openBtn = document.getElementById("openModalBtn");
+  const closeBtn = document.getElementById("closeModalBtn");
+
+ const tabs = {
+  Bronze: {
+    color: "from-yellow-200 to-yellow-400",
+    text: "🥉 Bronze",
+    benefit: ["Diskon 5% setiap transaksi"],
+    harga: 150000,
+    poin_awal: 0,
+  },
+  Silver: {
+    color: "from-gray-300 to-gray-500",
+    text: "🥈 Silver",
+    benefit: ["Diskon 10% setiap transaksi"],
+    harga: 250000,
+    poin_awal: 500,
+  },
+  Gold: {
+    color: "from-yellow-400 to-yellow-600",
+    text: "🥇 Gold",
+    benefit: ["Diskon 15% setiap transaksi"],
+    harga: 350000,
+    poin_awal: 1000,
+  }
+};
+
+
+  const tabButtons = {
+    Bronze: document.getElementById("tabBronze"),
+    Silver: document.getElementById("tabSilver"),
+    Gold: document.getElementById("tabGold"),
+  };
+
+function updateCard(level) {
+  const card = document.getElementById("cardLevel");
+  card.className = `w-1/3 rounded-lg p-4 text-white bg-gradient-to-br ${tabs[level].color}`;
+
+  card.innerHTML = `
+    <div class="text-center">
+      <div class="text-3xl mb-2">${tabs[level].text.split(' ')[0]}</div>
+      <div class="text-lg font-bold">${level}</div>
+      <div class="text-sm">Membership</div>
+      <div class="text-2xl font-semibold mt-4">Rp ${tabs[level].harga.toLocaleString('id-ID')}<span class="text-sm font-normal"> /tahun</span></div>
+      <div class="bg-white text-yellow-600 rounded-full text-xs mt-2 px-2 py-1 inline-block">Diskon ${tabs[level].benefit[0].split(' ')[1]}</div>
+    </div>
+  `;
+
+  // Perbarui label dan input tersembunyi
+  document.getElementById("levelText").textContent = level;
+  document.getElementById("inputLevelMember").value = level;
+
+  const list = document.getElementById("benefitList");
+  list.innerHTML = tabs[level].benefit
+    .map(b => `<li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> ${b}</li>`)
+    .join('');
+}
+
+
+  Object.keys(tabButtons).forEach(level => {
+    tabButtons[level].addEventListener("click", () => updateCard(level));
+  });
+
+  openBtn.addEventListener("click", () => modal.classList.remove("hidden"));
+  closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+
+  // Init with Gold by default
+  updateCard("Gold");
+</script>
 
   </body>
 
