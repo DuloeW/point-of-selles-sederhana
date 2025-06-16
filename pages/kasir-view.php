@@ -8,7 +8,22 @@
   $queryKategori = "SELECT DISTINCT kategori FROM produk WHERE kategori IS NOT NULL AND kategori != ''";
   $resultKategori = $koneksi->query($queryKategori);
 
+  if (isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
+  $keyword = $koneksi->real_escape_string($_GET['keyword']);
+  $produkList = [];
+
+  $query = "SELECT * FROM produk 
+            WHERE kode_produk LIKE '%$keyword%' 
+               OR nama_produk LIKE '%$keyword%'
+               OR kategori LIKE '%$keyword%'";
+
+  $result = mysqli_query($koneksi, $query);
+  while ($row = mysqli_fetch_assoc($result)) {
+    $produkList[] = $row;
+  }
+} else {
   $produkList = filterProdukByKategori($kategoriDipilih);
+}
 
   $queryPelanggan = "SELECT pelanggan.id_pelanggan, pelanggan.nama_lengkap, member.level_member 
                    FROM pelanggan 
@@ -132,12 +147,15 @@ if (
           <form action="" class="flex w-full gap-2">
             <input
               type="text"
-              placeholder="Cari produk..."
+              name="keyword"
+              placeholder="Cari kode produk..."
+              value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>"
               class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-            <button
-              class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white px-4 py-2 rounded-xl whitespace-nowrap">
-              Scan Barcode
-            </button>
+            <button 
+    type="submit"
+    class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-800 text-white px-4 py-2 rounded-xl whitespace-nowrap">
+    Cari
+  </button>
           </form>
         </div>
 
