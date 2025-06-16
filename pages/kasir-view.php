@@ -219,8 +219,6 @@
         </div>
       </div>
 
-      <!-- TODO BUAT TAMPILAN KERANJANG KOSONG -->
-
       <!-- Keranjang -->
       <div class="bg-white rounded-xl shadow-md flex flex-col">
         <!-- Header -->

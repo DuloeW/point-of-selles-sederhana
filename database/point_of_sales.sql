@@ -97,6 +97,8 @@ CREATE TABLE diskon_member (
     persentase_diskon DECIMAL(5,2) NOT NULL DEFAULT 0.00
 );
 
+ALTER TABLE penjualan ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP;
+
 -- Insert ke tabel produk
 INSERT INTO produk (kode_produk, nama_produk, deskripsi, harga_jual, stok, satuan, kategori, foto_produk, status_produk)
 VALUES
