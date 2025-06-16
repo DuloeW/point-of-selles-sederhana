@@ -18,7 +18,7 @@ function getProdukAktifHampirHabis() {
 
 function getTotalProdukHampirHabis() {
     global $koneksi;
-    $query = "SELECT COUNT(*) as total FROM produk WHERE stok <= 5 AND status_produk = 'Aktif'";
+    $query = "SELECT COUNT(*) as total FROM produk WHERE stok <= 20 AND stok <> 0 AND status_produk = 'Aktif'";
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_assoc($result)['total'] : 0;
 }
