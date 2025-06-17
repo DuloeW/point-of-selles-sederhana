@@ -36,7 +36,7 @@
             </div>
         </a>
 
-        <a href="" class="block">
+        <a href="laporan-penjualan-view.php" class="block">
             <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 3 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-chart-line <?= $active == 3 ? '' : 'text-purple-500' ?>"></i>
