@@ -1,6 +1,7 @@
 <?php 
 require '../handler/penjualan_handler.php'; // handler logika
 require '../utils/penjualan_util.php'; // fungsi data penjualan
+require '../utils/tools_util.php';
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +11,8 @@ require '../utils/penjualan_util.php'; // fungsi data penjualan
   <meta charset="UTF-8">
   <title>Laporan Penjualan</title>
   <link rel="stylesheet" href="../assets/output.css">
-  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
 </head>
 
 <body class="flex bg-gray-100">
@@ -18,10 +20,14 @@ require '../utils/penjualan_util.php'; // fungsi data penjualan
 
   <div class="flex-1 flex flex-col">
     <!-- Header -->
-    <div class="h-16 px-6 bg-white flex items-center justify-between shadow">
-      <h1 class="text-xl font-bold text-purple-700">Laporan Penjualan</h1>
-      <div class="text-sm text-gray-500">Kasir: Administrator | <?= date("d/m/Y") ?></div>
-    </div>
+   <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
+            <!-- header -->
+            <p class="font-bold text-xl text-purple-700">Laporan Penjualan</p>
+            <div class="text-neutral-600 text-right mr-3">
+                <p class="font-bold">Admin: <span>Mujianto</span></p>
+                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
+            </div>
+        </div>
 
     <!-- Konten Utama -->
     <main class="flex-1 p-6 space-y-6 overflow-y-auto">
@@ -108,7 +114,9 @@ require '../utils/penjualan_util.php'; // fungsi data penjualan
                   <span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs font-semibold"><?= $transaksi['status_penjualan'] === 'Completed' ? 'Selesai' : 'Pending' ?></span>
                 </td>
                 <td class="px-4 py-3">
-                  <a href="detail_transaksi.php?id=<?= $transaksi['id_penjualan'] ?>" class="text-blue-500 hover:underline text-sm">Detail</a>
+                  <a href="detail-penjualan-view.php?invoice=<?= $transaksi['nomor_invoice'] ?>" class="hover:underline text-sm">
+                    <i class="fa-solid fa-eye text-grey-300"></i>
+                  </a>
                 </td>
               </tr>
               <?php endforeach ?>

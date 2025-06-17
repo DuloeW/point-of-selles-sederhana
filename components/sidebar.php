@@ -1,15 +1,9 @@
 <!-- TODO responsive belum -->
 <div class="w-64 h-screen bg-gray-50 shadow-lg flex flex-col">
     <!-- Header -->
-    <div class="h-16 flex items-center justify-center text-purple-900 border-b border-purple-300/30">
-        <div class="flex items-center justify-center gap-3">
-            <div class="w-8 h-8 bg-gradient-to-br from-purple-800 to-blue-700 rounded-lg flex items-center justify-center">
-                <i class="fa-solid fa-store text-white"></i>
-            </div>
-            <div>
-                <h1 class="font-bold text-lg">Shopping Mart</h1>
-                <p class="text-sm opacity-90">d'Carts Basket</p>
-            </div>
+    <div class="h-16 flex items-center justify-center bg-gradient-to-br from-purple-800 to-blue-700 text-purple-900 border-b border-purple-300/30">
+        <div class="flex items-center gap-3">
+            <img class="h-10"  src="../assets/logo.png" alt="">
         </div>
     </div>
 
