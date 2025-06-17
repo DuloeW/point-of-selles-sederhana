@@ -1,11 +1,12 @@
 <!-- TODO responsive belum -->
 <div class="w-64 h-screen bg-gray-50 shadow-lg flex flex-col">
     <!-- Header -->
-    <div class="h-16 flex items-center justify-center bg-gradient-to-br from-purple-800 to-blue-700 text-purple-900 border-b border-purple-300/30">
+    <div class="h-16 flex items-center justify-center bg-gradient-to-br from-purple-800 to-blue-700 text-white border-b border-purple-300/30">
         <div class="flex items-center gap-3">
-            <img class="h-10"  src="../assets/logo.png" alt="">
+            <img class="h-10 drop-shadow-md" src="../assets/logo.png" alt="">
         </div>
     </div>
+
 
     <!-- Menu Items -->
     <div class="flex-1 p-4 mt-4 space-y-2">
@@ -40,7 +41,7 @@
             </div>
         </a>
 
-        <a href="" class="block">
+        <a href="pelanggan-view.php" class="block">
             <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 4 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
                 <div class="flex items-center gap-3">
                     <i class="fa-solid fa-users <?= $active == 4 ? '' : 'text-orange-500' ?>"></i>
