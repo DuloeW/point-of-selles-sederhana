@@ -12,53 +12,59 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Menu Items -->
     <div class="flex-1 p-4 mt-4 space-y-2">
-        <!-- POS - Active -->
-        <a href="" class="block">
-            <div class="flex items-center rounded-lg justify-between p-3 bg-purple-700 text-white">
+
+        <a href="dasboard-view.php" class="block">
+            <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 1 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
                 <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="font-medium">Dasboard</span>
+                    <i class="fa-solid fa-house <?= $active == 1 ? '' : 'text-blue-500' ?>"></i>
+                    <span class="font-medium">Dashboard</span>
                 </div>
                 <div class="w-2 h-2 bg-white rounded-full"></div>
             </div>
         </a>
-        
-        <!-- Produk -->
-        <a href="" class="block">
-            <div class="flex items-center gap-3 p-3 text-gray-600 rounded-lg transition-all scale-95 hover:scale-100 hover:shadow-md">
-                <i class="fa-solid fa-box text-green-500"></i>
-                <span>Produk</span>
+
+        <a href="kelola-produk-view.php" class="block">
+            <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 2 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-box <?= $active == 2 ? '' : 'text-green-500' ?>"></i>
+                    <span class="font-medium">Produk</span>
+                </div>
+                <div class="w-2 h-2 bg-white rounded-full"></div>
             </div>
         </a>
-        
-        <!-- Penjualan -->
-        <a href="" class="block">
-            <div class="flex items-center gap-3 p-3 text-gray-600 rounded-lg transition-all scale-95 hover:scale-100 hover:shadow-md">
-                <i class="fa-solid fa-chart-line text-purple-500"></i>
-                <span>Penjualan</span>
+
+        <a href="laporan-penjualan-view.php" class="block">
+            <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 3 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-chart-line <?= $active == 3 ? '' : 'text-purple-500' ?>"></i>
+                    <span class="font-medium">Penjualan</span>
+                </div>
+                <div class="w-2 h-2 bg-white rounded-full"></div>
             </div>
         </a>
-        
-        <!-- Pelanggan -->
+
         <a href="" class="block">
-            <div class="flex items-center gap-3 p-3 text-gray-600 rounded-lg transition-all scale-95 hover:scale-100 hover:shadow-md">
-                <i class="fa-solid fa-users text-orange-500"></i>
-                <span>Pelanggan</span>
+            <div class="flex items-center rounded-lg justify-between p-3 <?= $active == 4 ? 'bg-purple-700 text-white' : 'text-gray-600 transition-all scale-95 hover:scale-100 hover:shadow-md'; ?>">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-users <?= $active == 4 ? '' : 'text-orange-500' ?>"></i>
+                    <span class="font-medium">Pelanggan</span>
+                </div>
+                <div class="w-2 h-2 bg-white rounded-full"></div>
             </div>
         </a>
-        
-        <!-- Pengaturan -->
+
+        <!-- Pengaturan
         <a href="" class="block">
             <div class="flex items-center gap-3 p-3 text-gray-600 rounded-lg transition-all scale-95 hover:scale-100 hover:shadow-md">
                 <i class="fa-solid fa-cog text-gray-500"></i>
                 <span>Pengaturan</span>
             </div>
-        </a>
+        </a> -->
     </div>
-    
+
     <!-- User Card -->
     <div class="p-4">
         <div class="bg-red-100 rounded-lg p-3 flex items-center gap-3">

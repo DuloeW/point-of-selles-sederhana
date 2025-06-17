@@ -18,6 +18,7 @@ CREATE TABLE produk (
     tanggal_diperbarui DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status_produk ENUM('Aktif', 'Tidak Aktif') NOT NULL DEFAULT 'Aktif'
 );
+    
 
 -- Tabel pengguna
 CREATE TABLE pengguna (
@@ -47,6 +48,20 @@ CREATE TABLE member (
     poin INT NOT NULL DEFAULT 0,
     FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan)
 );
+
+CREATE TABLE keranjang (
+    id_keranjang INT PRIMARY KEY AUTO_INCREMENT,
+    id_pengguna INT NOT NULL,
+    id_pelanggan INT,
+    id_produk INT NOT NULL,
+    jumlah INT NOT NULL DEFAULT 1,
+    harga_saat_ini DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    subtotal DECIMAL(10,2) AS (jumlah * harga_saat_ini) STORED,
+    tanggal_ditambahkan DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_pengguna) REFERENCES pengguna(id_pengguna),
+    FOREIGN KEY (id_pelanggan) REFERENCES pelanggan(id_pelanggan),
+    FOREIGN KEY (id_produk) REFERENCES produk(id_produk)
+);  
 
 -- Tabel penjualan
 CREATE TABLE penjualan (
@@ -82,6 +97,8 @@ CREATE TABLE diskon_member (
     persentase_diskon DECIMAL(5,2) NOT NULL DEFAULT 0.00
 );
 
+ALTER TABLE penjualan ADD COLUMN created_at DATETIME DEFAULT CURRENT_TIMESTAMP;
+
 -- Insert ke tabel produk
 INSERT INTO produk (kode_produk, nama_produk, deskripsi, harga_jual, stok, satuan, kategori, foto_produk, status_produk)
 VALUES
@@ -109,25 +126,23 @@ VALUES
 -- Insert pengguna
 INSERT INTO pengguna (username, password, nama_lengkap, role, status)
 VALUES
-('admin', MD5('admin123'), 'Admin Utama', 'Admin', 'Active'),
-('kasir1', MD5('kasir123'), 'Kasir A', 'Kasir', 'Active'),
-('kasir2', MD5('kasir456'), 'Kasir B', 'Kasir', 'Active');
+('admin', 'admin123', 'Admin Utama', 'Admin', 'Active'),
+('kasir1', 'kasir123', 'Kasir A', 'Kasir', 'Active'),
+('kasir2', 'kasir456', 'Kasir B', 'Kasir', 'Active');
 
 -- Insert pelanggan
 INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
 VALUES
 ('Andi Wijaya', '081234567891', 'Jl. Merdeka 1', 'andi@mail.com'),
 ('Sari Dewi', '081234567892', 'Jl. Sudirman 2', 'sari@mail.com'),
-('Budi Hartono', '081234567893', 'Jl. Gajah Mada 3', 'budi@mail.com'),
-('Rina Kurnia', '081234567894', 'Jl. Pemuda 4', 'rina@mail.com'),
-('Fajar Pratama', '081234567895', 'Jl. Soekarno Hatta 5', 'fajar@mail.com');
+('Budi Hartono', '081234567893', 'Jl. Gajah Mada 3', 'budi@mail.com');
 
 -- Insert member
 INSERT INTO member (id_pelanggan, level_member, poin)
 VALUES
-(1, 'Gold', 500),
-(2, 'Silver', 300),
-(3, 'Bronze', 150);
+(1, 'Gold', 1000),
+(2, 'Silver', 500),
+(3, 'Bronze', 0);
 
 -- Insert diskon_member
 INSERT INTO diskon_member (level_member, persentase_diskon)

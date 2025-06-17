@@ -6,7 +6,6 @@
         <div>
             <p class="font-medium text-gray-800"><?= $nomor_invoice ?></p>
             <p class="text-sm text-gray-500"><?= $username ?></p>
-            <p class="text-xs text-gray-400"><?= $jumlah_beli ?> items</p>
         </div>
     </div>
     <div class="text-right">

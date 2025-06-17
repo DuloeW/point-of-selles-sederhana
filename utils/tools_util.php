@@ -2,7 +2,8 @@
 
 date_default_timezone_set('Asia/Makassar');
 
-function getFormattedDateAndDay() {
+function getFormattedDateAndDay()
+{
     $hari = date('l');
     $tanggal = date('d');
     $bulan = date('F');
@@ -12,7 +13,8 @@ function getFormattedDateAndDay() {
     return $formattedDate;
 }
 
-function getFormattedDate() {
+function getFormattedDate()
+{
     $hari = date('d');
     $bulan = date('m');
     $tahun = date('Y');
@@ -21,9 +23,24 @@ function getFormattedDate() {
     return $formattedDate;
 }
 
-function getFormattedTime() {
+function getFormattedTime()
+{
     return date('H.i');
 }
 
+function cariProdukByKode($kode_produk)
+{
+    global $koneksi;
+    $kode_produk = mysqli_real_escape_string($koneksi, $kode_produk);
+    $query = "SELECT * FROM produk WHERE kode_produk = '$kode_produk'";
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_assoc($result) : null;
+}
 
-?>
+// Fungsi untuk membangun URL dengan parameter yang sudah ada
+function buildUrlWithParams($newKategori)
+{
+    $params = $_GET; // Ambil semua parameter yang ada
+    $params['kategori'] = $newKategori; // Update kategori
+    return '?' . http_build_query($params);
+}
