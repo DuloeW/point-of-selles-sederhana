@@ -30,4 +30,18 @@ function getRataRataTransaksi() {
     return $result ? mysqli_fetch_assoc($result)['rata_rata'] : 0;
 }
 
+function getAllPenjualan() {
+    global $koneksi;
+    $query = "SELECT * FROM penjualan";
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+}
+
+function getAllDetailPenjualan() {
+    global $koneksi;
+    $query = "SELECT * FROM detail_penjualan";
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
+}
+
 ?>
