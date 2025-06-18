@@ -1,7 +1,6 @@
 <?php
 require '../utils/tools_util.php';
 require '../auth/koneksi.php';
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
 if ($keyword !== '') {
     $keyword = mysqli_real_escape_string($koneksi, $keyword);
