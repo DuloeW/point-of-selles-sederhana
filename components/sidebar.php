@@ -51,13 +51,6 @@
             </div>
         </a>
 
-        <!-- Pengaturan
-        <a href="" class="block">
-            <div class="flex items-center gap-3 p-3 text-gray-600 rounded-lg transition-all scale-95 hover:scale-100 hover:shadow-md">
-                <i class="fa-solid fa-cog text-gray-500"></i>
-                <span>Pengaturan</span>
-            </div>
-        </a> -->
     </div>
 
     <!-- User Card -->
