@@ -1,4 +1,8 @@
   <?php
+  // Authentication middleware - must be at the top
+  require_once '../middleware/auth_middleware.php';
+  requireAuth(['kasir']); // Both admin and kasir can access
+
   require '../utils/produk_util.php';
   require '../utils/keranjang_util.php';
   require_once '../utils/pelanggan_util.php';
@@ -30,7 +34,7 @@
                    LEFT JOIN member ON pelanggan.id_pelanggan = member.id_pelanggan";
   $resultPelanggan = $koneksi->query($queryPelanggan);
 
-  session_start();
+  // session_start();
   if (!isset($_SESSION['keranjang'])) {
     $_SESSION['keranjang'] = [];
   }
@@ -637,7 +641,7 @@
       <script>
         function confirmLogout() {
           if (confirm("Apakah Anda yakin ingin keluar?")) {
-            window.location.href = "../pages/logout.php";
+            window.location.href = "../handler/logout_handler.php";
           }
         }
       </script>

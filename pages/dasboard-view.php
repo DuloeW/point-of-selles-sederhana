@@ -1,4 +1,8 @@
 <?php
+// Authentication middleware - must be at the top
+require_once '../middleware/auth_middleware.php';
+requireAuth(['admin']); // Only admin can access dashboard
+
 require '../handler/dashboard_handler.php';
 require '../utils/produk_util.php';
 require '../utils/penjualan_util.php';
@@ -29,9 +33,8 @@ require '../utils/tools_util.php';
     <div class="flex-1 flex flex-col gap-3">
         <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
             <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Dashboard</p>
-            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span>Mujianto</span></p>
+            <p class="font-bold text-xl text-purple-700">Dashboard</p>            <div class="text-neutral-600 text-right mr-3">
+                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
                 <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
             </div>
         </div>
@@ -40,9 +43,8 @@ require '../utils/tools_util.php';
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
 
             <!-- TODO get admin belum dinamis -->
-            <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md shadow-gray-300 flex items-center justify-between">
-                <div>
-                    <p class="text-3xl font-bold">Selamat Datang, Mujianto!</p>
+            <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md shadow-gray-300 flex items-center justify-between">                <div>
+                    <p class="text-3xl font-bold">Selamat Datang, <?= getUserDisplayName() ?>!</p>
                     <p class="text-blue-100">Dashboard Admin - <?= getFormattedDateAndDay() ?></p>
                 </div>
                 <div class="text-right">
@@ -98,9 +100,9 @@ require '../utils/tools_util.php';
                             </div>
                             <h3 class="text-2xl font-semibold leading-none tracking-tight text-gray-800">Transaksi Terbaru</h3>
                         </div>
-                        <button class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-lg border flex items-center gap-3 text-sm">
+                        <a href="laporan-penjualan-view.php" class="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-lg border flex items-center gap-3 text-sm">
                             Lihat Semua <i class="fa-solid fa-arrow-right -rotate-45"></i>
-                        </button>
+                        </a>
                     </div>
                     <p class="text-gray-500 text-sm mb-4">Penjualan hari ini</p>
 
@@ -154,10 +156,10 @@ require '../utils/tools_util.php';
                     </div>
 
                     <!-- Restock Button -->
-                    <button class="w-full mt-4 bg-gradient-to-br from-red-500 to-orange-600 hover:bg-red-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                    <a href="kelola-produk-view.php" class="w-full mt-4 bg-gradient-to-br from-red-500 to-orange-600 hover:bg-red-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
                         <i class="fa-solid fa-box"></i>
                         Restock Sekarang
-                    </button>
+                    </a>
                 </div>
             </div>
 
