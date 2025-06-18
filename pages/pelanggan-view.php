@@ -2,8 +2,8 @@
 require '../utils/tools_util.php';
 require '../auth/koneksi.php';
 
-$query= "SELECT nama_lengkap, telepon, alamat, email FROM pelanggan";
-$result= mysqli_query($koneksi, $query);
+$query = "SELECT nama_lengkap, telepon, alamat, email FROM pelanggan";
+$result = mysqli_query($koneksi, $query);
 ?>
 
 <!DOCTYPE html>
@@ -13,7 +13,6 @@ $result= mysqli_query($koneksi, $query);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manajemen Pelanggan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
@@ -66,20 +65,20 @@ $result= mysqli_query($koneksi, $query);
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         <!-- Contoh Data (nanti ini diisi dari PHP atau JS yang ambil dari database) -->
-                      <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-        <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3 font-medium"><?= htmlspecialchars($row['nama_lengkap']) ?></td>
-            <td class="px-4 py-3">
-                📞 <?= htmlspecialchars($row['telepon']) ?> <br />
-                ✉️ <?= htmlspecialchars($row['email']) ?>
-            </td>
-            <td class="px-4 py-3"><?= htmlspecialchars($row['alamat']) ?></td>
-            <td class="px-4 py-3 space-x-2">
-                <button class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white rounded">Edit</button>
-                <button class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">Hapus</button>
-            </td>
-        </tr>
-    <?php endwhile; ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 font-medium"><?= htmlspecialchars($row['nama_lengkap']) ?></td>
+                                <td class="px-4 py-3">
+                                    📞 <?= htmlspecialchars($row['telepon']) ?> <br />
+                                    ✉️ <?= htmlspecialchars($row['email']) ?>
+                                </td>
+                                <td class="px-4 py-3"><?= htmlspecialchars($row['alamat']) ?></td>
+                                <td class="px-4 py-3 space-x-2">
+                                    <button class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white rounded">Edit</button>
+                                    <button class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">Hapus</button>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
                         <!-- Tambahkan data lainnya... -->
                     </tbody>
                 </table>
