@@ -1,9 +1,22 @@
 <?php
 require '../utils/tools_util.php';
 require '../auth/koneksi.php';
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
-$query = "SELECT nama_lengkap, telepon, alamat, email FROM pelanggan";
-$result = mysqli_query($koneksi, $query);
+if ($keyword !== '') {
+    $keyword = mysqli_real_escape_string($koneksi, $keyword);
+    $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+              FROM pelanggan p
+              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan
+              WHERE p.telepon LIKE '%$keyword%'";
+} else {
+    $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+              FROM pelanggan p
+              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan";
+}
+
+
+$result= mysqli_query($koneksi, $query);
 ?>
 
 <!DOCTYPE html>
@@ -45,43 +58,48 @@ $result = mysqli_query($koneksi, $query);
             </div>
 
             <!-- Search -->
-            <div class="mb-4">
-                <input
-                    type="text"
-                    placeholder="Cari pelanggan berdasarkan nama, telepon, atau email..."
-                    class="w-full p-3 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500" />
-            </div>
+            <div class="flex gap-2 mb-4">
+          <form action="" class="flex w-full gap-2">
+            <input
+              type="text"
+              name="keyword"
+              placeholder="Cari nomor telepon pelanggan.."
+              value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>"
+              class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+            <button
+              type="submit"
+              class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-800 text-white px-4 py-2 rounded-xl whitespace-nowrap">
+              Cari
+            </button>
+          </form>
+        </div>
 
             <!-- Tabel Pelanggan -->
             <div class="bg-white rounded-lg shadow overflow-x-auto">
-                <table class="w-full text-sm text-left">
-                    <thead class="bg-purple-700 text-white">
-                        <tr>
-                            <th class="px-4 py-3">Nama Pelanggan</th>
-                            <th class="px-4 py-3">Kontak</th>
-                            <th class="px-4 py-3">Alamat</th>
-                            <th class="px-4 py-3">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        <!-- Contoh Data (nanti ini diisi dari PHP atau JS yang ambil dari database) -->
-                        <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3 font-medium"><?= htmlspecialchars($row['nama_lengkap']) ?></td>
-                                <td class="px-4 py-3">
-                                    📞 <?= htmlspecialchars($row['telepon']) ?> <br />
-                                    ✉️ <?= htmlspecialchars($row['email']) ?>
-                                </td>
-                                <td class="px-4 py-3"><?= htmlspecialchars($row['alamat']) ?></td>
-                                <td class="px-4 py-3 space-x-2">
-                                    <button class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white rounded">Edit</button>
-                                    <button class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded">Hapus</button>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                        <!-- Tambahkan data lainnya... -->
-                    </tbody>
-                </table>
+            <table class="w-full text-sm text-left table-auto">
+  <thead class="bg-purple-700 text-white">
+    <tr>
+      <th class="px-4 py-3 w-1/4">Nama Pelanggan</th>
+      <th class="px-4 py-3 w-1/3 text-center">Kontak</th>
+      <th class="px-4 py-3 text-center">Poin</th>
+      <th class="px-4 py-3 w-2/5 text-right">Alamat</th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-200">
+    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
+      <tr class="hover:bg-gray-50 align-top">
+        <td class="px-4 py-3 font-medium"><?= htmlspecialchars($row['nama_lengkap']) ?></td>
+        <td class="px-4 py-3 text-center">
+          📞 <?= htmlspecialchars($row['telepon']) ?> |
+          ✉️ <?= htmlspecialchars($row['email']) ?>
+        </td>
+        <td class="px-4 py-3 text-center"><?= htmlspecialchars($row['poin']) ?></td>
+        <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>
+      </tr>
+    <?php endwhile; ?>
+  </tbody>
+</table>
+
             </div>
 
         </main>
