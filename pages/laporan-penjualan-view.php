@@ -90,7 +90,7 @@ require '../utils/tools_util.php';
                 <th class="px-4 py-3">Tanggal & Waktu</th>
                 <th class="px-4 py-3">Kasir</th>
                 <th class="px-4 py-3">Pelanggan</th>
-                <th class="px-4 py-3">Subtotal</th>
+                <th class="px-4 py-3">Total</th>
                 <th class="px-4 py-3">Pembayaran</th>
                 <th class="px-4 py-3">Status</th>
                 <th class="px-4 py-3">Aksi</th>
