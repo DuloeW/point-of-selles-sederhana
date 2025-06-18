@@ -35,8 +35,8 @@ function getRiwayatTransaksi() {
   $sql = "SELECT p.id_penjualan, p.nomor_invoice, p.total_bayar, p.tipe_pembayaran, p.status_penjualan, 
           pg.nama_lengkap AS nama_kasir, pl.nama_lengkap AS nama_pelanggan, p.created_at
           FROM penjualan p
-          JOIN pengguna pg ON pg.id_pengguna = p.id_kasir
-          JOIN pelanggan pl ON pl.id_pelanggan = p.id_pelanggan
+          LEFT JOIN pengguna pg ON pg.id_pengguna = p.id_kasir
+          LEFT JOIN pelanggan pl ON pl.id_pelanggan = p.id_pelanggan
           ORDER BY p.created_at DESC";
   $result = mysqli_query($koneksi, $sql);
   $data = [];
@@ -45,6 +45,7 @@ function getRiwayatTransaksi() {
   }
   return $data;
 }
+
 
 function getTotalPenjualan() {
   global $koneksi;
