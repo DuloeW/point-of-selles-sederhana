@@ -2,6 +2,8 @@
 require '../utils/tools_util.php';
 require '../auth/koneksi.php';
 
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+
 if ($keyword !== '') {
     $keyword = mysqli_real_escape_string($koneksi, $keyword);
     $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
