@@ -28,9 +28,9 @@ function filterProdukByKategori($kategori) {
     $kategori = mysqli_real_escape_string($koneksi, $kategori);
 
     if ($kategori === 'Semua') {
-        $query = "SELECT * FROM produk ORDER BY nama_produk ASC";
+        $query = "SELECT * FROM produk WHERE status_produk = 'Aktif' ORDER BY nama_produk ASC";
     } else {
-        $query = "SELECT * FROM produk WHERE kategori = '$kategori' ORDER BY nama_produk ASC";
+        $query = "SELECT * FROM produk WHERE kategori = '$kategori' AND status_produk = 'Aktif' ORDER BY nama_produk ASC";
     }
 
     $result = mysqli_query($koneksi, $query);

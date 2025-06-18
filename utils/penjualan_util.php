@@ -65,4 +65,4 @@ function getTotalTransaksi() {
   $q = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM penjualan");
   return mysqli_fetch_assoc($q)['total'];
 }
-?>
+  ?>
