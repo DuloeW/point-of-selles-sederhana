@@ -1,4 +1,8 @@
 <?php
+// Authentication middleware - must be at the top
+require_once '../middleware/auth_middleware.php';
+requireAuth(['admin']); // Only admin can access sales details
+
 include '../auth/koneksi.php'; // sesuaikan path koneksi kamu
 
 $invoice = $_GET['invoice'] ?? '';

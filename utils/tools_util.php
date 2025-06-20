@@ -44,3 +44,29 @@ function buildUrlWithParams($newKategori)
     $params['kategori'] = $newKategori; // Update kategori
     return '?' . http_build_query($params);
 }
+
+// Function to read .env file
+function loadEnv($filePath) {
+    $env = [];
+    if (file_exists($filePath)) {
+        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            // Skip comments and empty lines
+            if (strpos(trim($line), '#') === 0 || empty(trim($line))) {
+                continue;
+            }
+            
+            // Parse key=value pairs
+            if (strpos($line, '=') !== false) {
+                list($key, $value) = explode('=', $line, 2);
+                $key = trim($key);
+                $value = trim($value);
+                
+                // Remove quotes if present
+                $value = trim($value, '"\'');                
+                $env[$key] = $value;
+            }
+        }
+    }
+    return $env;
+}

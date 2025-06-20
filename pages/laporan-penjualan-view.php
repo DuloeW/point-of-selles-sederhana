@@ -1,4 +1,8 @@
 <?php 
+// Authentication middleware - must be at the top
+require_once '../middleware/auth_middleware.php';
+requireAuth(['admin']); // Only admin can access sales reports
+
 require '../handler/penjualan_handler.php'; // handler logika
 require '../utils/penjualan_util.php'; // fungsi data penjualan
 require '../utils/tools_util.php';
@@ -20,20 +24,18 @@ require '../utils/tools_util.php';
 
 <body class="flex bg-gray-100">
   <?php $active = 3; include '../components/sidebar.php'; ?>
-
-  <div class="flex-1 flex flex-col">
+  <div class="flex-1 flex flex-col h-screen">
     <!-- Header -->
     <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
             <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Laporan Penjualan</p>
-            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span>Mujianto</span></p>
+            <p class="font-bold text-xl text-purple-700">Laporan Penjualan</p>            <div class="text-neutral-600 text-right mr-3">
+                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
                 <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
             </div>
         </div>
 
     <!-- Konten Utama -->
-    <main class="flex-1 p-6 space-y-6 overflow-y-auto">
+    <main class="flex-1 flex flex-col space-y-6 w-full p-5 overflow-y-scroll">
       
       <!-- Kartu Informasi -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
