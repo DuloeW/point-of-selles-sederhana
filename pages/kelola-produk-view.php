@@ -46,7 +46,7 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                         <i class="fa-solid fa-box-open text-2xl"></i>
                         <p class="font-bold text-4xl">Manajemen Produk</p>
                     </div>
-                    <p class="mt-1 text-xl font-semibold text-purple-100">Kelola inventori dan produk toko Anda</p>
+                    <p class="mt-1 text-xl font-semibold text-purple-100">Kelola inventori dan produk toko</p>
                 </div>
                 <div>
                     <a href="tambah-produk-view.php">

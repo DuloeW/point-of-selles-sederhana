@@ -57,12 +57,8 @@
     <a href="../handler/logout_handler.php">
         <div class="p-4">
             <div class="bg-red-100 rounded-lg p-3 flex items-center gap-3">
-                <div class="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">
-                    K
-                </div>
                 <div class="flex-1">
-                    <p class="font-medium text-gray-800">Kasir Satu</p>
-                    <p class="text-sm text-gray-500">Kasir</p>
+                    <p class="font-medium text-gray-800">Keluar</p>
                 </div>
                 <i class="fa-solid fa-sign-out-alt text-gray-400"></i>
             </div>

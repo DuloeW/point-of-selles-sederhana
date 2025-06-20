@@ -43,7 +43,7 @@ $result = mysqli_query($koneksi, $query);
   <div class="flex-1 flex flex-col gap-3">
     <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
       <!-- header -->
-      <p class="font-bold text-xl text-purple-700">Manajemen Pelangan</p>
+      <p class="font-bold text-xl text-purple-700">Manajemen Pelanggan</p>
       <div class="text-neutral-600 text-right mr-3">        <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
         <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
       </div>
@@ -55,9 +55,9 @@ $result = mysqli_query($koneksi, $query);
         <div class="text-purple-100">
           <div class="flex items-center gap-3">
             <i class="fa-solid fa-box-open text-2xl"></i>
-            <p class="font-bold text-4xl">Manajemen Produk</p>
+            <p class="font-bold text-4xl">Manajemen Pelanggan</p>
           </div>
-          <p class="mt-1 text-xl font-semibold text-purple-100">Kelola inventori dan produk toko Anda</p>
+          <p class="mt-1 text-xl font-semibold text-purple-100">Kelola data pelanggan</p>
         </div>
       </div>
 

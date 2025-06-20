@@ -52,10 +52,19 @@
         </div>
 
         <!-- Tombol Login -->
-        <button type="submit"
-          class="w-full py-3 text-lg bg-gradient-to-r from-purple-700 via-purple-500 to-blue-500 text-white font-bold rounded-lg border border-white/30 shadow-lg transform scale-95 hover:scale-100 hover:ring-2 hover:ring-white/50 transition duration-300">
-          Login
-        </button>
+         <div class="mb-3">
+           <button type="submit"
+             class="w-full py-3 text-lg bg-gradient-to-r from-purple-700 via-purple-500 to-blue-500 text-white font-bold rounded-lg border border-white/30 shadow-lg transform scale-95 hover:scale-100 hover:ring-2 hover:ring-white/50 transition duration-300">
+             Login
+           </button>
+         </div>
+
+        <div class="mb-4 flex justify-center items-center text-sm space-x-1">
+      <span class="text-white">Masih belum punya akun?</span>
+     <a href="register-view.php" class="text-purple-700 no-underline hover:no-underline focus:no-underline active:no-underline">
+       Klik di sini
+       </a>
+      </div>
       </form>
 
       <p class="text-xs text-center text-white/70 mt-6">
