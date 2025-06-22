@@ -205,11 +205,6 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                                                         <i class="fa-solid fa-edit"></i>
                                                     </div>
                                                 </a>
-                                                <a href="">
-                                                    <div class="p-2 text-red-600 hover:bg-red-50 rounded-lg border border-red-200 transition-colors">
-                                                        <i class="fa-solid fa-trash"></i>
-                                                    </div>
-                                                </a>
                                             </div>
                                         </td>
                                     </tr>
