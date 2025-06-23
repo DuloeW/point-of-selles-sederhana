@@ -4,24 +4,11 @@ require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access customer management
 
 require '../utils/tools_util.php';
-require '../auth/koneksi.php';
+require '../utils/pelanggan_util.php';
 
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
-if ($keyword !== '') {
-  $keyword = mysqli_real_escape_string($koneksi, $keyword);
-  $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
-              FROM pelanggan p
-              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan
-              WHERE p.telepon LIKE '%$keyword%'";
-} else {
-  $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
-              FROM pelanggan p
-              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan";
-}
-
-
-$result = mysqli_query($koneksi, $query);
+$result = getPelangganByNomorHp($keyword);
 ?>
 
 <!DOCTYPE html>
@@ -41,13 +28,11 @@ $result = mysqli_query($koneksi, $query);
   include '../components/sidebar.php'
   ?>
   <div class="flex-1 flex flex-col gap-3">
-    <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
-      <!-- header -->
-      <p class="font-bold text-xl text-purple-700">Manajemen Pelanggan</p>
-      <div class="text-neutral-600 text-right mr-3">        <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
-        <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
-      </div>
-    </div>
+
+    <?php
+    $title = "Manajemen Pelanggan";
+    include '../components/header-page.php'
+    ?>
 
     <!--Main-->
     <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
@@ -78,7 +63,7 @@ $result = mysqli_query($koneksi, $query);
             </button>
           </form>
         </div>
-  
+
         <!-- Tabel Pelanggan -->
         <div class="bg-white rounded-lg shadow overflow-x-auto">
           <table class="w-full text-sm text-left table-auto">
@@ -95,8 +80,8 @@ $result = mysqli_query($koneksi, $query);
                 <tr class="hover:bg-gray-50 align-top">
                   <td class="px-4 py-3 font-medium"><?= htmlspecialchars($row['nama_lengkap']) ?></td>
                   <td class="px-4 py-3 text-center">
-                    📞 <?= htmlspecialchars($row['telepon']) ?> |
-                    ✉️ <?= htmlspecialchars($row['email']) ?>
+                    <i class="fa-solid fa-phone"></i> <?= htmlspecialchars($row['telepon']) ?> |
+                    <i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($row['email']) ?>
                   </td>
                   <td class="px-4 py-3 text-center"><?= htmlspecialchars($row['poin']) ?></td>
                   <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>
@@ -104,7 +89,7 @@ $result = mysqli_query($koneksi, $query);
               <?php endwhile; ?>
             </tbody>
           </table>
-  
+
         </div>
       </div>
 

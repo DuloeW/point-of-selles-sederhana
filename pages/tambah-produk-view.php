@@ -24,13 +24,10 @@ require '../utils/produk_util.php';
     include '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
-        <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
-            <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Tambah Produk</p>            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
-                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
-            </div>
-        </div>
+        <?php
+        $title = "Tambah Produk";
+        include '../components/header-page.php'
+        ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
             <!-- Header Section -->
@@ -171,12 +168,12 @@ require '../utils/produk_util.php';
 
                         <!-- Submit Buttons -->
                         <div class="flex gap-4 pt-6 border-t border-gray-200">
-                            <button type="submit" 
+                            <button type="submit"
                                 class="flex-1 bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-save"></i>
                                 Simpan Produk
                             </button>
-                            <button type="reset" 
+                            <button type="reset"
                                 class="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors font-medium flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-undo"></i>
                                 Reset Form

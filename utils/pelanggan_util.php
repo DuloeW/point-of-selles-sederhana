@@ -1,15 +1,17 @@
-<?php 
+<?php
 
 include '../auth/koneksi.php';
 
-function getTotalPelanggan() {
+function getTotalPelanggan()
+{
     global $koneksi;
     $query = "SELECT COUNT(*) as total FROM pelanggan";
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_assoc($result)['total'] : 0;
 }
 
-function tambahMemberBaru($nama, $telepon, $email, $alamat, $level) {
+function tambahMemberBaru($nama, $telepon, $email, $alamat, $level)
+{
     global $koneksi;
 
     $insert = mysqli_query($koneksi, "INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
@@ -31,13 +33,15 @@ function tambahMemberBaru($nama, $telepon, $email, $alamat, $level) {
 
 
 
-function tentukanLevelMember($poin) {
+function tentukanLevelMember($poin)
+{
     if ($poin >= 1000) return 'Gold';
     if ($poin >= 500) return 'Silver';
     return 'Bronze';
 }
 
-function totalAkhir() {
+function totalAkhir()
+{
     global $koneksi;
     session_start(); // Wajib ada jika belum dipanggil sebelumnya
 
@@ -69,4 +73,21 @@ function totalAkhir() {
     return $totalAkhir;
 }
 
-?>
+function getPelangganByNomorHp($keyword)
+{
+    global $koneksi;
+
+    if ($keyword !== '') {
+        $keyword = mysqli_real_escape_string($koneksi, $keyword);
+        $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+              FROM pelanggan p
+              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan
+              WHERE p.telepon LIKE '%$keyword%'";
+    } else {
+        $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+              FROM pelanggan p
+              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan";
+    }
+
+    return mysqli_query($koneksi, $query);
+}

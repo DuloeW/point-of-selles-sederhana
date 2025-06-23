@@ -3,45 +3,22 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access sales details
 
-include '../auth/koneksi.php'; // sesuaikan path koneksi kamu
+require '../utils/detail_penjualan_util.php';
 
 $invoice = $_GET['invoice'] ?? '';
 
-$query = "
-SELECT 
-    p.nama_produk,
-    dp.harga_saat_ini AS harga_satuan,
-    dp.jumlah_beli,
-    dp.subtotal,
-    CASE
-        WHEN m.level_member IS NOT NULL THEN 
-            dp.subtotal * (dm.persentase_diskon / 100)
-        ELSE 0
-    END AS diskon,
-    CASE
-        WHEN m.level_member IS NOT NULL THEN 
-            dp.subtotal - (dp.subtotal * (dm.persentase_diskon / 100))
-        ELSE dp.subtotal
-    END AS total_setelah_diskon
-FROM detail_penjualan dp
-JOIN produk p ON dp.id_produk = p.id_produk
-JOIN penjualan pj ON dp.id_penjualan = pj.id_penjualan
-LEFT JOIN pelanggan pl ON pj.id_pelanggan = pl.id_pelanggan
-LEFT JOIN member m ON pl.id_pelanggan = m.id_pelanggan
-LEFT JOIN diskon_member dm ON m.level_member = dm.level_member
-WHERE pj.nomor_invoice = '$invoice';
-";
-
-$result = mysqli_query($koneksi, $query);
+$result = getDetailPenjualanByInvoice($invoice);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detail Penjualan</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 font-sans">
 
   <div class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -87,4 +64,5 @@ $result = mysqli_query($koneksi, $query);
   </div>
 
 </body>
+
 </html>

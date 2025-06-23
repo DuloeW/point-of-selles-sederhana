@@ -31,13 +31,10 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
     include '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
-        <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
-            <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Produk</p>            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
-                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
-            </div>
-        </div>
+        <?php
+        $title = "Kelola Produk";
+        include '../components/header-page.php'
+        ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
             <div class="p-10 flex items-center justify-between bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl text-white shadow-md shadow-gray-300">

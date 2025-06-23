@@ -31,3 +31,33 @@ function getTransaksiHariIni()
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
 }
+
+function getDetailPenjualanByInvoice($invoice)
+{
+    global $koneksi;
+    $query = "
+        SELECT 
+            p.nama_produk,
+            dp.harga_saat_ini AS harga_satuan,
+            dp.jumlah_beli,
+            dp.subtotal,
+            CASE
+                WHEN m.level_member IS NOT NULL THEN 
+                    dp.subtotal * (dm.persentase_diskon / 100)
+                ELSE 0
+            END AS diskon,
+            CASE
+                WHEN m.level_member IS NOT NULL THEN 
+                    dp.subtotal - (dp.subtotal * (dm.persentase_diskon / 100))
+                ELSE dp.subtotal
+            END AS total_setelah_diskon
+        FROM detail_penjualan dp
+        JOIN produk p ON dp.id_produk = p.id_produk
+        JOIN penjualan pj ON dp.id_penjualan = pj.id_penjualan
+        LEFT JOIN pelanggan pl ON pj.id_pelanggan = pl.id_pelanggan
+        LEFT JOIN member m ON pl.id_pelanggan = m.id_pelanggan
+        LEFT JOIN diskon_member dm ON m.level_member = dm.level_member
+        WHERE pj.nomor_invoice = '$invoice';";
+
+    return mysqli_query($koneksi, $query);
+}

@@ -27,23 +27,21 @@ require '../utils/tools_util.php';
 
 <body class="flex w-full h-screen bg-gray-100">
     <?php
-        $active = 1; // Set active menu item for Dasboard
-        include '../components/sidebar.php'
+    $active = 1; // Set active menu item for Dasboard
+    include '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col gap-3">
-        <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
-            <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Dashboard</p>            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
-                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
-            </div>
-        </div>
+        <?php
+        $title = "Dashboard";
+        include '../components/header-page.php'
+        ?>
 
         <!-- containner main content -->
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
 
             <!-- TODO get admin belum dinamis -->
-            <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md shadow-gray-300 flex items-center justify-between">                <div>
+            <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md shadow-gray-300 flex items-center justify-between">
+                <div>
                     <p class="text-3xl font-bold">Selamat Datang, <?= getUserDisplayName() ?>!</p>
                     <p class="text-blue-100">Dashboard Admin - <?= getFormattedDateAndDay() ?></p>
                 </div>
@@ -55,28 +53,7 @@ require '../utils/tools_util.php';
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <?php
-                $dashboardData = [
-                    [
-                        'title' => 'Transaksi Hari Ini',
-                        'value' => getTotalDataTransaksiHariIni(),
-                        'suffix' => 'Transaksi',
-                        'color' => 'blue',
-                        'icon' => 'fa-regular fa-calendar-check' // Ganti sesuai icon yang kamu pakai
-                    ],                    [
-                        'title' => 'Pendapatan Hari Ini',
-                        'value' => 'Rp ' . number_format(getPendapatanHariIni() ?? 0, 0, ',', '.'),
-                        'subtext' => 'Rp ' . number_format(getPendapatanHariIni() ?? 0, 0, ',', '.'),
-                        'color' => 'green',
-                        'icon' => 'fa-solid fa-money-bill-wave'
-                    ],
-                    [
-                        'title' => 'Rata-rata Transaksi',
-                        'value' => 'Rp ' . number_format(getRataRataTransaksi() ?? 0, 0, ',', '.'),
-                        'suffix' => 'Per transaksi',
-                        'color' => 'purple',
-                        'icon' => 'fa-solid fa-money-bill-wave'
-                    ]
-                ];
+                $dashboardData = getDataForInformationDashboard();
 
                 foreach ($dashboardData as $data) {
                     $title = $data['title'];
@@ -138,7 +115,6 @@ require '../utils/tools_util.php';
 
                     <!-- Stok Warning List -->
                     <div class="space-y-3">
-                        <!-- Item 1 -->
                         <?php
                         $produkHampirHabis = getProdukAktifHampirHabis();
                         if (empty($produkHampirHabis)) {

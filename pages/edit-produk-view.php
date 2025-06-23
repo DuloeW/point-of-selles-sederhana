@@ -12,11 +12,9 @@ if (!isset($_GET['id_produk'])) {
     exit;
 }
 
-include '../auth/koneksi.php';
-
 $id_produk = $_GET['id_produk'];
 $produk = getProdukById($id_produk);
-if(count($produk) == 0){
+if (count($produk) == 0) {
     echo "<script>alert('Data produk tidak ditemukan!');window.location='kelola-produk-view.php';</script>";
     exit;
 }
@@ -40,13 +38,10 @@ if(count($produk) == 0){
     include '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
-        <div class="w-full h-16 p-3 pl-5 bg-white flex items-center justify-between shadow-md shadow-gray-200">
-            <!-- header -->
-            <p class="font-bold text-xl text-purple-700">Edit Produk</p>            <div class="text-neutral-600 text-right mr-3">
-                <p class="font-bold">Admin: <span><?= getUserDisplayName() ?></span></p>
-                <p class="text-xs text-gray-500 font-semibold tracking-wider"><?= getFormattedDate() ?></p>
-            </div>
-        </div>
+        <?php
+        $title = "Edit Produk";
+        include '../components/header-page.php'
+        ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">
             <!-- Header Section -->
@@ -76,7 +71,7 @@ if(count($produk) == 0){
                 <div class="p-6">
                     <form method="post" action="../handler/update_pruduk_handler.php" enctype="multipart/form-data" class="space-y-6">
                         <input type="hidden" name="id_produk" value="<?= $produk['id_produk']; ?>">
-                        
+
                         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             <!-- Kode Produk -->
                             <div>
@@ -164,7 +159,7 @@ if(count($produk) == 0){
                                     Tanggal Dibuat <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="tanggal_dibuat" id="tanggal_dibuat" readonly
-                                    value="<?= $produk['tanggal_dibuat'];?>"
+                                    value="<?= $produk['tanggal_dibuat']; ?>"
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-colors">
                             </div>
 
@@ -194,18 +189,18 @@ if(count($produk) == 0){
                             <label for="foto_produk" class="block text-sm font-medium text-gray-700 mb-2">
                                 Foto Produk
                             </label>
-                            
+
                             <!-- Current Photo Display -->
                             <?php if (!empty($produk['foto_produk'])): ?>
                                 <div class="mb-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
                                     <p class="text-sm text-gray-600 mb-2">Foto saat ini:</p>
-                                    <img src="../uploads/<?= $produk['foto_produk']; ?>" 
-                                         alt="Foto Produk" 
-                                         class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+                                    <img src="../uploads/<?= $produk['foto_produk']; ?>"
+                                        alt="Foto Produk"
+                                        class="w-32 h-32 object-cover rounded-lg border border-gray-300">
                                     <p class="text-xs text-gray-500 mt-1"><?= $produk['foto_produk']; ?></p>
                                 </div>
                             <?php endif; ?>
-                            
+
                             <!-- File Upload -->
                             <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
                                 <i class="fa-solid fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
@@ -223,7 +218,7 @@ if(count($produk) == 0){
 
                         <!-- Submit Buttons -->
                         <div class="flex gap-4 pt-6 border-t border-gray-200">
-                            <button type="submit" 
+                            <button type="submit"
                                 class="flex-1 bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors font-medium flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-save"></i>
                                 Update Produk
