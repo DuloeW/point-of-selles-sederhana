@@ -198,9 +198,8 @@
         <div class="grid grid-cols-3 gap-4">
           <?php if (!empty($produkList)): ?>
             <?php foreach ($produkList as $produk): ?>
-              <div class="bg-white rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">
-                <div class="flex justify-center items-center w-full h-24 bg-gray-100 rounded-lg mb-4">
-                  <img src="../assets/<?= $produk['foto_produk']; ?>" alt="<?= $produk['nama_produk']; ?>" class="h-20 object-cover">
+              <div class="bg-white rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">                <div class="w-full h-32 bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                  <img src="../uploads/<?= $produk['foto_produk']; ?>" alt="<?= $produk['nama_produk']; ?>" class="w-full h-full object-cover">
                 </div>
                 <h3 class="font-bold text-lg mb-1"><?= $produk['nama_produk']; ?></h3>
                 <p class="text-sm text-gray-600 mb-1"><?= $produk['deskripsi']; ?></p>

@@ -11,7 +11,7 @@ function getTotalPruduk() {
 
 function getProdukAktifHampirHabis() {
     global $koneksi;
-    $query = "SELECT * FROM produk WHERE stok <= 5 AND status_produk = 'Aktif' ORDER BY nama_produk ASC";
+    $query = "SELECT * FROM produk WHERE stok <= 20 AND status_produk = 'Aktif' ORDER BY nama_produk ASC";
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
 }
