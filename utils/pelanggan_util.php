@@ -11,7 +11,7 @@ function getTotalPelanggan()
 }
 
 function tambahMemberBaru($nama, $telepon, $email, $alamat, $level)
-{
+{   
     global $koneksi;
 
     $insert = mysqli_query($koneksi, "INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
@@ -79,15 +79,30 @@ function getPelangganByNomorHp($keyword)
 
     if ($keyword !== '') {
         $keyword = mysqli_real_escape_string($koneksi, $keyword);
-        $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+        $query = "SELECT p.id_pelanggan, p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
               FROM pelanggan p
               LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan
               WHERE p.telepon LIKE '%$keyword%'";
     } else {
-        $query = "SELECT p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
+        $query = "SELECT p.id_pelanggan, p.nama_lengkap, p.telepon, p.alamat, p.email, m.poin 
               FROM pelanggan p
               LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan";
     }
 
     return mysqli_query($koneksi, $query);
+}
+
+function getPelangganById($id_pelanggan)
+{
+    global $koneksi;
+
+    $id_pelanggan = mysqli_real_escape_string($koneksi, $id_pelanggan);
+    $query = "SELECT p.id_pelanggan, p.nama_lengkap, p.telepon, p.alamat, p.email, 
+                     m.level_member, m.poin, m.tanggal_daftar
+              FROM pelanggan p
+              LEFT JOIN member m ON p.id_pelanggan = m.id_pelanggan
+              WHERE p.id_pelanggan = '$id_pelanggan'";
+
+    $result = mysqli_query($koneksi, $query);
+    return $result ? mysqli_fetch_assoc($result) : [];
 }
