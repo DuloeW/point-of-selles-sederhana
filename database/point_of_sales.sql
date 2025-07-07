@@ -123,12 +123,12 @@ VALUES
 ('PRD019', 'Mentega', 'Mentega masak', 15000, 50, 'pcs', 'Bahan Kue', 'mentega.jpg', 'Aktif'),
 ('PRD020', 'Kopi Robusta', 'Kopi kuat & pekat', 23000, 35, 'bungkus', 'Minuman', 'robusta.jpg', 'Tidak Aktif');
 
--- Insert pengguna
-INSERT INTO pengguna (username, password, nama_lengkap, role, status)
-VALUES
-('admin', 'admin123', 'Admin Utama', 'Admin', 'Active'),
-('kasir1', 'kasir123', 'Kasir A', 'Kasir', 'Active'),
-('kasir2', 'kasir456', 'Kasir B', 'Kasir', 'Active');
+-- -- Insert pengguna
+-- INSERT INTO pengguna (username, password, nama_lengkap, role, status)
+-- VALUES
+-- ('admin', 'admin123', 'Admin Utama', 'Admin', 'Active'),
+-- ('kasir1', 'kasir123', 'Kasir A', 'Kasir', 'Active'),
+-- ('kasir2', 'kasir456', 'Kasir B', 'Kasir', 'Active');
 
 -- Insert pelanggan
 INSERT INTO pelanggan (nama_lengkap, telepon, alamat, email)
@@ -151,17 +151,17 @@ VALUES
 ('Silver', 10.00),
 ('Bronze', 5.00);
 
--- Insert penjualan
-INSERT INTO penjualan (nomor_invoice, total_bayar, jumlah_bayar, kembalian, tipe_pembayaran, id_kasir, id_pelanggan, status_penjualan)
-VALUES
-('INV001', 50000, 60000, 10000, 'Cash', 2, 1, 'Completed'),
-('INV002', 45000, 50000, 5000, 'Debit', 2, 2, 'Completed'),
-('INV003', 75000, 80000, 5000, 'QRIS', 3, 3, 'Completed');
+-- -- Insert penjualan
+-- INSERT INTO penjualan (nomor_invoice, total_bayar, jumlah_bayar, kembalian, tipe_pembayaran, id_kasir, id_pelanggan, status_penjualan)
+-- VALUES
+-- ('INV001', 50000, 60000, 10000, 'Cash', 2, 1, 'Completed'),
+-- ('INV002', 45000, 50000, 5000, 'Debit', 2, 2, 'Completed'),
+-- ('INV003', 75000, 80000, 5000, 'QRIS', 3, 3, 'Completed');
 
--- Insert detail_penjualan
-INSERT INTO detail_penjualan (id_penjualan, id_produk, jumlah_beli, harga_saat_ini, subtotal)
-VALUES
-(1, 1, 2, 25000, 50000),
-(2, 2, 3, 15000, 45000),
-(3, 10, 5, 3000, 15000),
-(3, 4, 5, 12000, 60000);
+-- -- Insert detail_penjualan
+-- INSERT INTO detail_penjualan (id_penjualan, id_produk, jumlah_beli, harga_saat_ini, subtotal)
+-- VALUES
+-- (1, 1, 2, 25000, 50000),
+-- (2, 2, 3, 15000, 45000),
+-- (3, 10, 5, 3000, 15000),
+-- (3, 4, 5, 12000, 60000);
