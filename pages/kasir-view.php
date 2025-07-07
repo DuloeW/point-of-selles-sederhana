@@ -76,18 +76,18 @@
     exit;
   }
 
+  //TODO cang ngubah ne ajak tampilan tambah member
   // hubungkan pelanggan ke database
   if (
     $_SERVER['REQUEST_METHOD'] == 'POST' &&
-    isset($_POST['nama_lengkap'], $_POST['telepon'], $_POST['email'], $_POST['alamat'], $_POST['level_member'])
+    isset($_POST['nama_lengkap'], $_POST['telepon'], $_POST['email'], $_POST['alamat'])
   ) {
     $nama = $_POST['nama_lengkap'];
     $telepon = $_POST['telepon'];
     $email = $_POST['email'];
     $alamat = $_POST['alamat'];
-    $level = $_POST['level_member'];
 
-    $result = tambahMemberBaru($nama, $telepon, $email, $alamat, $level);
+    $result = tambahMemberBaru($nama, $telepon, $email, $alamat, 'Bronze');
 
     if ($result['success']) {
       header('Location: ../pages/kasir-view.php?success=member_added');
@@ -500,14 +500,14 @@
           <p class="text-center text-sm text-gray-500 mb-4">Daftarkan pelanggan sebagai member untuk mendapatkan berbagai keuntungan</p>
 
           <!-- Tabs -->
-          <div class="flex justify-center space-x-4 mb-6">
+          <!-- <div class="flex justify-center space-x-4 mb-6">
             <button id="tabBronze" class="px-4 py-2 rounded-md bg-gradient-to-r from-yellow-200 to-yellow-400 text-sm font-semibold">🥉 Bronze</button>
             <button id="tabSilver" class="px-4 py-2 rounded-md bg-gradient-to-r from-gray-300 to-gray-500 text-sm font-semibold">🥈 Silver</button>
             <button id="tabGold" class="px-4 py-2 rounded-md bg-gradient-to-r from-yellow-400 to-yellow-600 text-sm font-semibold">🥇 Gold</button>
-          </div>
+          </div> -->
 
           <!-- Card Member Info -->
-          <div id="memberCard" class="flex gap-6 mb-6">
+          <!-- <div id="memberCard" class="flex gap-6 mb-6">
             <div id="cardLevel" class="w-1/3 rounded-lg p-4 text-white bg-gradient-to-br from-yellow-400 to-yellow-600">
               <div class="text-center">
                 <div class="text-3xl mb-2">🥇</div>
@@ -524,11 +524,13 @@
                 <li class="flex items-center gap-2"><span class="text-green-500 font-bold">✓</span> Diskon 15% setiap transaksi</li>
               </ul>
             </div>
-          </div>
+          </div> -->
 
+
+          //TODO ne keubah cang'e
           <!-- Form Input -->
           <form method="POST" action="" class="space-y-4">
-            <input type="hidden" name="level_member" id="inputLevelMember" value="Gold">
+            <!-- <input type="hidden" name="level_member" id="inputLevelMember" value="Gold"> -->
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium">Nama Lengkap</label>
@@ -544,7 +546,8 @@
               </div>
               <div>
                 <label class="block text-sm font-medium">Alamat</label>
-                <input type="text" name="alamat" class="w-full mt-1 px-3 py-2 border rounded-md" placeholder="Masukkan alamat">
+                <textarea name="alamat" id="" class="w-full mt-1 px-3 py-2 border rounded-md"></textarea>
+                <!-- <input type="text" name="alamat"  placeholder="Masukkan alamat"> -->
               </div>
             </div>
 

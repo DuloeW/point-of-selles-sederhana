@@ -173,6 +173,21 @@ try {
             $stmt_poin->execute();
         }
     }
+
+    //TODO keubah logic level member e
+
+    //update level member if poin >= 100
+    if ($id_pelanggan) {
+        $stmt_level = $koneksi->prepare("UPDATE member SET level_member = 
+            CASE 
+                WHEN poin >= 1000 THEN 'Gold' 
+                WHEN poin >= 500 THEN 'Silver' 
+                ELSE 'Bronze' 
+            END 
+            WHERE id_pelanggan = ?");
+        $stmt_level->bind_param("i", $id_pelanggan);
+        $stmt_level->execute();
+    }
     
     // Commit transaction
     $koneksi->commit();
