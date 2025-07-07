@@ -73,6 +73,7 @@ $result = getPelangganByNomorHp($keyword);
                 <th class="px-4 py-3 w-1/3 text-center">Kontak</th>
                 <th class="px-4 py-3 text-center">Poin</th>
                 <th class="px-4 py-3 w-2/5 text-right">Alamat</th>
+                <th class="px-4 py-3 w-2/5 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
@@ -84,15 +85,19 @@ $result = getPelangganByNomorHp($keyword);
                     <i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($row['email']) ?>
                   </td>
                   <td class="px-4 py-3 text-center"><?= htmlspecialchars($row['poin']) ?></td>
-                  <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>
+                  <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>                  <td class="px-4 py-3 text-right">
+                    <a href="update-pelanggan-view.php?id_pelanggan=<?= htmlspecialchars($row['id_pelanggan']) ?>">
+                      <div class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
+                        <i class="fa-solid fa-edit"></i>
+                      </div>
+                    </a>
+                  </td>
                 </tr>
               <?php endwhile; ?>
             </tbody>
           </table>
-
         </div>
       </div>
-
     </main>
 </body>
 </body>
