@@ -129,3 +129,16 @@ function getDataForInformationDashboard()
         ]
     ];
 }
+
+function getFileNameInUplouds($filename)
+{
+    $uploadsDir = '../uploads/';
+    $filePath = $uploadsDir . $filename;
+
+    // Check if file exists
+    if (file_exists($filePath)) {
+        return $filePath;
+    } else {
+        return null; // or handle the error as needed
+    }
+}

@@ -4,6 +4,7 @@
   requireAuth(['kasir']); // Both admin and kasir can access
 
   require '../utils/produk_util.php';
+  require '../utils/tools_util.php';
   require '../utils/keranjang_util.php';
   require_once '../utils/pelanggan_util.php';
 
@@ -120,7 +121,7 @@
   <body class="bg-gradient-to-b from-gray-100 to-gray-200 font-sans">
 
     <!-- Header -->
-    <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white shadow">
+    <div class="flex justify-between items-center px-6 py-4 bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow">
       <img src="../assets/logo.png" alt=""
         class="w-24 ">
       <div class="flex items-center gap-4">
@@ -140,66 +141,76 @@
       <div class="col-span-2">
         <!-- Info Panel -->
         <div class="grid grid-cols-1 gap-4 mb-4">
-          <div class="bg-gradient-to-r from-indigo-500 to-indigo-700 text-white p-4 rounded-xl shadow">
+          <div class="bg-gradient-to-r from-purple-500 to-purple-700 text-white p-4 rounded-xl shadow">
             <h2 class="text-sm">Total Produk</h2>
-            <p class="text-4xl font-bold"><?= getTotalPruduk() ?></p>
+            <p class="text-4xl font-bold"><?= getTotalProdukAktif() ?></p>
+          </div>
+        </div>
+
+        <div class="sticky top-0 bg">
+          <div class="flex gap-2 mb-4">
+            <form action="" class="flex w-full gap-2">
+              <input
+                type="text"
+                name="keyword"
+                placeholder="Cari kode produk..."
+                value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>"
+                class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+              <button
+                type="submit"
+                class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-800 text-white px-4 py-2 rounded-xl whitespace-nowrap">
+                Cari
+              </button>
+            </form>
+          </div>
+  
+          <!-- Kategori -->
+          <div class="grid grid-cols-4 gap-2 mb-4">
+            <?php
+            $isSemua = $kategoriDipilih === 'Semua';
+            $semuaClass = $isSemua
+              ? 'bg-purple-600 text-white'
+              : 'bg-gray-200 hover:bg-gray-300 text-gray-800';
+            ?>
+            <a href="?kategori=Semua"
+              class="<?= $semuaClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
+              Semua
+            </a>
+  
+  
+            <?php while ($row = $resultKategori->fetch_assoc()): ?>
+              <?php
+              $kategoriSekarang = $row['kategori'];
+              $isActive = $kategoriSekarang === $kategoriDipilih;
+              $btnClass = $isActive
+                ? 'bg-purple-600 text-white'
+                : 'bg-gray-200 hover:bg-gray-300 text-gray-800';
+              ?>
+              <a href="?kategori=<?= urlencode($kategoriSekarang) ?>"
+                class="<?= $btnClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
+                <?= htmlspecialchars($kategoriSekarang) ?>
+              </a>
+  
+  
+            <?php endwhile; ?>
           </div>
         </div>
 
         <!-- Filter dan Pencarian -->
-        <div class="flex gap-2 mb-4">
-          <form action="" class="flex w-full gap-2">
-            <input
-              type="text"
-              name="keyword"
-              placeholder="Cari kode produk..."
-              value="<?= isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : '' ?>"
-              class="flex-grow px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-            <button
-              type="submit"
-              class="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-800 text-white px-4 py-2 rounded-xl whitespace-nowrap">
-              Cari
-            </button>
-          </form>
-        </div>
-
-        <!-- Kategori -->
-        <div class="grid grid-cols-4 gap-2 mb-4">
-          <?php
-          $isSemua = $kategoriDipilih === 'Semua';
-          $semuaClass = $isSemua
-            ? 'bg-indigo-600 text-white'
-            : 'bg-gray-200 hover:bg-gray-300 text-gray-800';
-          ?>
-          <a href="?kategori=Semua"
-            class="<?= $semuaClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
-            Semua
-          </a>
-
-
-          <?php while ($row = $resultKategori->fetch_assoc()): ?>
-            <?php
-            $kategoriSekarang = $row['kategori'];
-            $isActive = $kategoriSekarang === $kategoriDipilih;
-            $btnClass = $isActive
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-800';
-            ?>
-            <a href="?kategori=<?= urlencode($kategoriSekarang) ?>"
-              class="<?= $btnClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
-              <?= htmlspecialchars($kategoriSekarang) ?>
-            </a>
-
-
-          <?php endwhile; ?>
-        </div>
 
         <!-- listproduk -->
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-3 gap-4 overflow-y-auto h-[calc(100vh-200px)]">
           <?php if (!empty($produkList)): ?>
             <?php foreach ($produkList as $produk): ?>
-              <div class="bg-white rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">                <div class="w-full h-32 bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                  <img src="../uploads/<?= $produk['foto_produk']; ?>" alt="<?= $produk['nama_produk']; ?>" class="w-full h-full object-cover">
+              <div class="bg-white rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">
+                <div class="w-full h-32 rounded-lg mb-4 overflow-hidden">
+                  <?php if (getFileNameInUplouds($produk['foto_produk']) == null) : ?>
+                    <div class="w-full h-full flex items-center justify-center">
+                      <p class="font-semibold opacity-25">Gambar tidak ditemukan</p>
+                    </div>
+                  <?php else: ?>
+                    <img src="../uploads/<?= $produk['foto_produk']; ?>" class="h-full mx-auto">
+                  <?php endif; ?>
                 </div>
                 <h3 class="font-bold text-lg mb-1"><?= $produk['nama_produk']; ?></h3>
                 <p class="text-sm text-gray-600 mb-1"><?= $produk['deskripsi']; ?></p>
@@ -223,10 +234,10 @@
       </div>
 
       <!-- Keranjang -->
-      <div class="bg-white rounded-xl shadow-md flex flex-col">
+      <div class="bg-white h-fit rounded-xl shadow-md flex flex-col pb-5">
         <!-- Header -->
-        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white px-4 py-3">
-          <h2 class="text-lg font-bold">Keranjang Belanja</h2>
+        <div class="bg-white text-gray-800/55 px-4 py-3 rounded-tr-xl rounded-tl-xl">
+          <h2 class="text-xl font-bold">Keranjang Belanja</h2>
         </div> <!-- Pilih Pelanggan -->
         <form method="POST" action="" class="p-4">
           <div class="mb-4">
@@ -260,49 +271,49 @@
         </form>
 
         <div class="px-4">
-
           <!-- Item Keranjang -->
-          <?php
-          $subtotal = 0;
-          $diskonPersen = 0;
+          <div class="grid <?= sizeof($_SESSION['keranjang']) > 1 ? 'grid-cols-2' : 'grid-cols-1' ?> gap-4">
+            <?php
+            $subtotal = 0;
+            $diskonPersen = 0;
 
-          // Hitung subtotal dari keranjang
-          if (!empty($_SESSION['keranjang'])):
-            foreach ($_SESSION['keranjang'] as $idProduk => $jumlah):
-              $produk = getProdukById($idProduk); // Fungsi ambil produk by ID
-              $totalItem = $produk['harga_jual'] * $jumlah;
-              $subtotal += $totalItem;
-          ?>
-              <!-- Tampilkan masing-masing item -->
-              <div class="border rounded-lg p-3 mb-4 bg-white shadow-sm">
-                <div class="flex justify-between">
-                  <div>
-                    <p class="font-semibold"><?= $produk['nama_produk']; ?></p>
-                    <p class="text-sm text-gray-500">Rp <?= number_format($produk['harga_jual'], 0, ',', '.'); ?> × <?= $jumlah ?></p>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <a href="?kurang=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">−</a>
-                    <span><?= $jumlah ?></span>
-                    <a href="?tambah=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">+</a>
-                    <a href="?hapus=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-red-500 to-red-700 text-white rounded hover:from-red-600 hover:to-red-800 transition">
-                      🗑 <span class="text-xs font-semibold">Hapus</span>
-                    </a>
+            // Hitung subtotal dari keranjang
+            if (!empty($_SESSION['keranjang'])):
+              foreach ($_SESSION['keranjang'] as $idProduk => $jumlah):
+                $produk = getProdukById($idProduk); // Fungsi ambil produk by ID
+                $totalItem = $produk['harga_jual'] * $jumlah;
+                $subtotal += $totalItem;
+            ?>
+                <!-- Tampilkan masing-masing item -->
+                <div class="border rounded-lg p-3 mb-4 bg-white shadow-sm">
+                  <div class="flex flex-col justify-between gap-3">
+                    <div>
+                      <p class="font-semibold"><?= $produk['nama_produk']; ?></p>
+                      <p class="text-sm text-gray-500">Rp <?= number_format($produk['harga_jual'], 0, ',', '.'); ?> × <?= $jumlah ?></p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <a href="?kurang=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">−</a>
+                      <span><?= $jumlah ?></span>
+                      <a href="?tambah=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="px-2 bg-gray-200 rounded hover:bg-gray-300">+</a>
+                      <a href="?hapus=<?= $idProduk ?>&kategori=<?= urlencode($kategoriDipilih) ?>" class="flex items-center gap-1 px-2 py-1 bg-white shadow-xl rounded-md">
+                        <!-- <span class="text-xs font-semibold py-1">Hapus</span> -->
+                        <i class="fa-solid fa-trash text-red-500"></i>
+                      </a>
+                    </div>
                   </div>
                 </div>
+              <?php
+              endforeach;
+            else:
+              ?>
+              <!-- Keranjang kosong -->
+              <div class="flex flex-col items-center justify-center text-gray-500 py-12 col-span-2">
+                <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" class="w-24 h-24 mb-4 opacity-70">
+                <p class="text-lg font-semibold">Keranjang masih kosong</p>
+                <p class="text-sm text-gray-400">Silakan pilih produk dari katalog.</p>
               </div>
-            <?php
-            endforeach;
-          else:
-            ?>
-            <!-- Keranjang kosong -->
-            <div class="flex flex-col items-center justify-center text-gray-500 py-12">
-              <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty Cart" class="w-24 h-24 mb-4 opacity-70">
-              <p class="text-lg font-semibold">Keranjang masih kosong</p>
-              <p class="text-sm text-gray-400">Silakan pilih produk dari katalog.</p>
-            </div>
-          <?php endif; ?>
-
-
+            <?php endif; ?>
+          </div>
 
           <?php if (!empty($_SESSION['keranjang'])): ?>
             <?php
@@ -332,59 +343,63 @@
                 <p>Rp <?= number_format($diskon, 0, ',', '.') ?></p>
               </div>
 
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-gray-100 p-3 rounded">
+                  <p class="text-sm text-gray-600">Subtotal:</p>
+                  <p class="text-xl font-bold text-black">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+                </div>
+              <?php endif; ?>
+
               <div class="bg-gray-100 p-3 rounded">
-                <p class="text-sm text-gray-600">Subtotal:</p>
-                <p class="text-xl font-bold text-black">Rp <?= number_format($subtotal, 0, ',', '.') ?></p>
+                <p class="text-sm text-gray-600">Subtotal (akhir):</p>
+                <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
               </div>
-            <?php endif; ?>
-
-            <div class="bg-gray-100 p-3 rounded">
-              <p class="text-sm text-gray-600">Subtotal (akhir):</p>
-              <p class="text-xl font-bold text-green-700">Rp <?= number_format($totalAkhir, 0, ',', '.') ?></p>
-            </div>
-          <?php else: ?> <?php endif; ?>
-
-          <!-- Payment Form (only show if cart has items) -->
-          <?php if (!empty($_SESSION['keranjang'])): ?>
-            <form method="POST" action="../handler/kasir_handler.php">
-              <!-- Metode Pembayaran -->
-              <div class="mb-4">
-                <label for="metode" class="block text-sm font-semibold text-gray-700 mb-1">
-                  🧾 Metode Pembayaran
-                </label>
-                <select id="metode" name="metode" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300">
-                  <option value="cash">💵 Cash</option>
-                  <option value="qris">📱 QRIS</option>
-                  <option value="debit">🏧 Kartu Debit</option>
-                  <option value="transfer">💳 Transfer Bank</option>
-                </select>
+            <?php else: ?> <?php endif; ?>
               </div>
 
-              <!-- Jumlah Bayar -->
-              <div class="mb-4">
-                <label for="bayar" class="block text-sm font-semibold text-gray-700 mb-1">
-                  💰 Jumlah Bayar
-                </label>
-                <input
-                  type="text"
-                  id="bayar"
-                  name="bayar"
-                  placeholder="Masukkan jumlah pembayaran"
-                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-              </div>
 
-              <!-- Kembalian -->
-              <div id="kembalianDisplay" class="hidden mt-2 mb-4 p-3 rounded-lg bg-gradient-to-r from-green-100 to-green-200 border border-green-300">
-                <p class="text-green-800 text-sm font-semibold">Kembalian:</p>
-                <p id="jumlahKembalian" class="text-xl font-bold text-green-700">Rp 0</p>
-              </div>
+              <!-- Payment Form (only show if cart has items) -->
+              <?php if (!empty($_SESSION['keranjang'])): ?>
+                <form method="POST" action="../handler/kasir_handler.php">
+                  <!-- Metode Pembayaran -->
+                   <div class="grid grid-cols-2 gap-4">
+                     <div class="mb-4">
+                       <label for="metode" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
+                         Metode Pembayaran
+                       </label>
+                       <select id="metode" name="metode" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                         <option value="cash">💵 Cash</option>
+                         <option value="qris">📱 QRIS</option>
+                         <option value="debit">🏧 Kartu Debit</option>
+                         <option value="transfer">💳 Transfer Bank</option>
+                       </select>
+                     </div>
+   
+                     <!-- Jumlah Bayar -->
+                     <div class="mb-4">
+                       <label for="bayar" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
+                        Jumlah Bayar
+                       </label>
+                       <input
+                         type="text"
+                         id="bayar"
+                         name="bayar"
+                         placeholder="Masukkan jumlah pembayaran"
+                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                     </div>
+   
+                     <!-- Kembalian -->
+                     <div id="kembalianDisplay" class="hidden p-3 col-span-2 rounded-lg bg-gradient-to-r from-green-100 to-green-200 border border-green-300">
+                       <p class="text-green-800 text-sm font-semibold">Kembalian:</p>
+                       <p id="jumlahKembalian" class="text-xl font-bold text-green-700">Rp 0</p>
+                     </div>
+                   </div>
 
-              <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-bold">
-                Proses Pembayaran
-              </button>
-            </form>
-          <?php endif; ?>
-
+                  <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-bold">
+                    Proses Pembayaran
+                  </button>
+                </form>
+              <?php endif; ?>
         </div>
       </div>
     </div>
