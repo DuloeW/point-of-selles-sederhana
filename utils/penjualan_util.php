@@ -27,7 +27,9 @@ function getRataRataTransaksi() {
     global $koneksi;
     $query = "SELECT AVG(total_bayar) as rata_rata FROM penjualan";
     $result = mysqli_query($koneksi, $query);
-    return $result ? mysqli_fetch_assoc($result)['rata_rata'] : 0;
+    $row = $result ? mysqli_fetch_assoc($result) : null;
+
+    return $row && $row['rata_rata'] !== null ? (float)$row['rata_rata'] : 0;
 }
 
 function getRiwayatTransaksi() {
