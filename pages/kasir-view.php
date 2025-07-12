@@ -530,7 +530,7 @@
                 <div class="text-3xl mb-2">🥇</div>
                 <div class="text-lg font-bold">Gold</div>
                 <div class="text-sm">Membership</div>
-                <div class="text-2xl font-semibold mt-4">Rp 300.000<span class="text-sm font-normal">/tahun</span></div>
+                <div class="text-2xl font-semibold mt-4">Rp 300.000</div>
                 <div class="bg-white text-yellow-600 rounded-full text-xs mt-2 px-2 py-1 inline-block">Diskon 15%</div>
               </div>
             </div>
