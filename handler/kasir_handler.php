@@ -32,7 +32,7 @@ $metode_pembayaran = trim($_POST['metode']);
 $jumlah_bayar = str_replace(['.', ','], '', $_POST['bayar']); // Remove formatting
 $jumlah_bayar = floatval($jumlah_bayar);
 $id_pelanggan = isset($_SESSION['id_pelanggan']) && $_SESSION['id_pelanggan'] !== 'umum' ? intval($_SESSION['id_pelanggan']) : null;
-$id_kasir = 2; // Default kasir ID - you should get this from session
+$id_kasir = $_SESSION['user_id']; // Default kasir ID - you should get this from session
 
 // Calculate totals from cart
 $subtotal = 0;
@@ -188,16 +188,7 @@ try {
     $format_bayar = number_format($jumlah_bayar, 0, ',', '.');
     $format_kembalian = number_format($kembalian, 0, ',', '.');
     
-    $success_message = "Transaksi berhasil!\\n\\n";
-    $success_message .= "Invoice: $invoice_number\\n";
-    $success_message .= "Subtotal: Rp $format_subtotal\\n";
-    if ($diskon_nominal > 0) {
-        $success_message .= "Diskon ($diskon_persen%): Rp $format_diskon\\n";
-    }
-    $success_message .= "Total: Rp $format_total\\n";
-    $success_message .= "Bayar: Rp $format_bayar\\n";
-    $success_message .= "Kembalian: Rp $format_kembalian\\n";
-    $success_message .= "Metode: $tipe_pembayaran";
+    $success_message = "Transaksi berhasil!";
     
     echo "<script>alert('$success_message');window.location='../pages/kasir-view.php';</script>";
     

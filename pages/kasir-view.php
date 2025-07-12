@@ -8,6 +8,8 @@
   require '../utils/keranjang_util.php';
   require_once '../utils/pelanggan_util.php';
 
+  $username = $_SESSION['nama_lengkap'];
+
   $kategoriDipilih = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 
   $queryKategori = "SELECT DISTINCT kategori FROM produk WHERE kategori IS NOT NULL AND kategori != ''";
@@ -109,13 +111,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Halaman Kasir</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/output.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
   </head>
 
   <body class="bg-gradient-to-b from-gray-100 to-gray-200 font-sans">
@@ -125,7 +125,7 @@
       <img src="../assets/logo.png" alt=""
         class="w-24 ">
       <div class="flex items-center gap-4">
-        <span class="text-sm">Online</span>
+        <span class="text-sm"><?= $username ?></span>
         <div class="w-3 h-3 bg-green-400 rounded-full"></div>
         <button
           onclick="confirmLogout()"
@@ -163,7 +163,7 @@
               </button>
             </form>
           </div>
-  
+
           <!-- Kategori -->
           <div class="grid grid-cols-4 gap-2 mb-4">
             <?php
@@ -176,8 +176,8 @@
               class="<?= $semuaClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
               Semua
             </a>
-  
-  
+
+
             <?php while ($row = $resultKategori->fetch_assoc()): ?>
               <?php
               $kategoriSekarang = $row['kategori'];
@@ -190,8 +190,8 @@
                 class="<?= $btnClass ?> text-center px-4 py-2 rounded-xl text-sm font-semibold w-full">
                 <?= htmlspecialchars($kategoriSekarang) ?>
               </a>
-  
-  
+
+
             <?php endwhile; ?>
           </div>
         </div>
@@ -202,7 +202,7 @@
         <div class="grid grid-cols-3 gap-4 overflow-y-auto h-[calc(100vh-200px)]">
           <?php if (!empty($produkList)): ?>
             <?php foreach ($produkList as $produk): ?>
-              <div class="bg-white rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">
+              <div class="bg-white h-fit rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">
                 <div class="w-full h-32 rounded-lg mb-4 overflow-hidden">
                   <?php if (getFileNameInUplouds($produk['foto_produk']) == null) : ?>
                     <div class="w-full h-full flex items-center justify-center">
@@ -362,42 +362,44 @@
               <?php if (!empty($_SESSION['keranjang'])): ?>
                 <form method="POST" action="../handler/kasir_handler.php">
                   <!-- Metode Pembayaran -->
-                   <div class="grid grid-cols-2 gap-4">
-                     <div class="mb-4">
-                       <label for="metode" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
-                         Metode Pembayaran
-                       </label>
-                       <select id="metode" name="metode" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300">
-                         <option value="cash">💵 Cash</option>
-                         <option value="qris">📱 QRIS</option>
-                         <option value="debit">🏧 Kartu Debit</option>
-                         <option value="transfer">💳 Transfer Bank</option>
-                       </select>
-                     </div>
-   
-                     <!-- Jumlah Bayar -->
-                     <div class="mb-4">
-                       <label for="bayar" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
-                        Jumlah Bayar
-                       </label>
-                       <input
-                         type="text"
-                         id="bayar"
-                         name="bayar"
-                         placeholder="Masukkan jumlah pembayaran"
-                         class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
-                     </div>
-   
-                     <!-- Kembalian -->
-                     <div id="kembalianDisplay" class="hidden p-3 col-span-2 rounded-lg bg-gradient-to-r from-green-100 to-green-200 border border-green-300">
-                       <p class="text-green-800 text-sm font-semibold">Kembalian:</p>
-                       <p id="jumlahKembalian" class="text-xl font-bold text-green-700">Rp 0</p>
-                     </div>
-                   </div>
+                  <div class="grid grid-cols-2 gap-2 px-4">
+                    <div class="mb-4">
+                      <label for="metode" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
+                        Metode Pembayaran
+                      </label>
+                      <select id="metode" name="metode" class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                        <option value="cash">💵 Cash</option>
+                        <option value="qris">📱 QRIS</option>
+                        <option value="debit">🏧 Kartu Debit</option>
+                        <option value="transfer">💳 Transfer Bank</option>
+                      </select>
+                    </div>
 
-                  <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-bold">
-                    Proses Pembayaran
-                  </button>
+                    <!-- Jumlah Bayar -->
+                    <div class="mb-4">
+                      <label for="bayar" class="block text-sm font-semibold text-gray-700 mt-3 mb-1">
+                        Jumlah Bayar
+                      </label>
+                      <input
+                        type="text"
+                        id="bayar"
+                        name="bayar"
+                        placeholder="Jumlah pembayaran"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+                    </div>
+
+                    <!-- Kembalian -->
+                    <div id="kembalianDisplay" class="hidden p-3 col-span-2 rounded-lg bg-gradient-to-r from-green-100 to-green-200 border border-green-300">
+                      <p class="text-green-800 text-sm font-semibold">Kembalian:</p>
+                      <p id="jumlahKembalian" class="text-xl font-bold text-green-700">Rp 0</p>
+                    </div>
+                  </div>
+
+                  <div class="px-4 mt-4">
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 font-bold">
+                      Proses Pembayaran
+                    </button>
+                  </div>
                 </form>
               <?php endif; ?>
         </div>

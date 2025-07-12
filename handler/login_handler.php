@@ -57,7 +57,7 @@ function clearLoginCookies()
 /**
  * Validates user credentials and returns user data if valid
  */
-function    authenticateUser($koneksi, $username, $password)
+function authenticateUser($koneksi, $username, $password)
 {
     // Sanitize input
     $username = mysqli_real_escape_string($koneksi, $username);
@@ -159,6 +159,7 @@ if (!isset($_SESSION['user_id'])) {
         $_SESSION['role'] = $cookieUser['role'];
         $_SESSION['login_time'] = time();
 
+
         // Refresh cookies
         setLoginCookies($cookieUser);
 
@@ -190,6 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
         $_SESSION['role'] = $user['role'];
         $_SESSION['login_time'] = time();
+
+        echo "<script>console.log('Login successful for user: {$user['id_pengguna']}');</script>";
 
         // Set login cookies for persistent login
         setLoginCookies($user);

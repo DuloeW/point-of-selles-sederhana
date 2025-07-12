@@ -104,7 +104,7 @@ require '../utils/tools_util.php';
                 </div>
 
                 <!-- Peringatan Stok -->
-                <div class="bg-white rounded-xl p-6 shadow-md">
+                <div class="bg-white h-fit rounded-xl p-6 shadow-md">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-orange-500 rounded-lg flex items-center justify-center">
                             <i class="fa-solid fa-triangle-exclamation text-white text-sm"></i>
@@ -124,6 +124,7 @@ require '../utils/tools_util.php';
                                 $nama_produk = $produk['nama_produk'];
                                 $kategori = $produk['kategori'];
                                 $stok = $produk['stok'];
+                                $url = "edit-produk-view.php?id_produk=" . $produk['id_produk'];
                                 include '../components/card-produk-hampir-habis.php';
                             }
                         }
