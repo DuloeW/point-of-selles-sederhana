@@ -147,7 +147,7 @@
           </div>
         </div>
 
-        <div class="sticky top-0 bg">
+        <div class="sticky top-0 bg-transparent backdrop-blur-lg z-10 p-4 rounded-xl shadow mb-4">
           <div class="flex gap-2 mb-4">
             <form action="" class="flex w-full gap-2">
               <input
