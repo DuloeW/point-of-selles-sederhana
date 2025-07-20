@@ -19,6 +19,7 @@ $result = getPelangganByNomorHp($keyword);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manajemen Pelanggan</title>
   <link rel="stylesheet" href="../assets/output.css">
+  <link rel="icon" type="image/png" href="../assets/d-logo.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
@@ -85,7 +86,8 @@ $result = getPelangganByNomorHp($keyword);
                     <i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($row['email']) ?>
                   </td>
                   <td class="px-4 py-3 text-center"><?= htmlspecialchars($row['poin']) ?></td>
-                  <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>                  <td class="px-4 py-3 text-right">
+                  <td class="px-4 py-3 text-right"><?= htmlspecialchars($row['alamat']) ?></td>
+                  <td class="px-4 py-3 text-right">
                     <a href="update-pelanggan-view.php?id_pelanggan=<?= htmlspecialchars($row['id_pelanggan']) ?>">
                       <div class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">
                         <i class="fa-solid fa-edit"></i>

@@ -16,8 +16,7 @@ require '../utils/tools_util.php';
   <meta charset="UTF-8">
   <title>Laporan Penjualan</title>
   <link rel="stylesheet" href="../assets/output.css">
-  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
-  <!-- Font Awesome v6 -->
+  <link rel="icon" type="image/png" href="../assets/d-logo.png">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
 </head>
@@ -105,6 +104,7 @@ require '../utils/tools_util.php';
       </div>
     </main>
   </div>
+  <script src="https://kit.fontawesome.com/yourkit.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

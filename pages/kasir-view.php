@@ -112,6 +112,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Halaman Kasir</title>
     <link rel="stylesheet" href="../assets/output.css">
+    <link rel="icon" type="image/png" href="../assets/d-logo.png">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
