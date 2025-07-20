@@ -11,14 +11,14 @@ function getTotalPruduk() {
 
 function getProdukAktifHampirHabis() {
     global $koneksi;
-    $query = "SELECT * FROM produk WHERE stok <= 20 AND status_produk = 'Aktif' ORDER BY nama_produk ASC";
+    $query = "SELECT * FROM produk WHERE stok <= 10 AND stok <> 0 AND status_produk = 'Aktif' ORDER BY stok ASC";
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_all($result, MYSQLI_ASSOC) : [];
 }
 
 function getTotalProdukHampirHabis() {
     global $koneksi;
-    $query = "SELECT COUNT(*) as total FROM produk WHERE stok <= 20 AND stok <> 0 AND status_produk = 'Aktif'";
+    $query = "SELECT COUNT(*) as total FROM produk WHERE stok <= 10 AND stok <> 0 AND status_produk = 'Aktif'";
     $result = mysqli_query($koneksi, $query);
     return $result ? mysqli_fetch_assoc($result)['total'] : 0;
 }

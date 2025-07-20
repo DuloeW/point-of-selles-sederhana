@@ -1,4 +1,4 @@
-<a href="<?= $url ?>" class="">
+<a href="<?= $url ?>">
     <div class="p-3 bg-orange-50 border border-orange-200 rounded-lg">
         <div class="flex items-center justify-between">
             <div>

@@ -70,7 +70,7 @@ require '../utils/tools_util.php';
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Transaksi Terbaru -->
-                <div class="bg-white rounded-xl p-6 shadow-md lg:col-span-2">
+                <div class="bg-white h-fit rounded-xl p-6 shadow-md lg:col-span-2">
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-600  rounded-lg flex items-center justify-center">
@@ -116,20 +116,22 @@ require '../utils/tools_util.php';
 
                     <!-- Stok Warning List -->
                     <div class="space-y-3">
-                        <?php
-                        $produkHampirHabis = getProdukAktifHampirHabis();
-                        if (empty($produkHampirHabis)) {
-                            echo '<p class="text-gray-500 text-center text-sm">Tidak ada produk yang hampir habis.</p>';
-                        } else {
-                            foreach ($produkHampirHabis as $produk) {
-                                $nama_produk = $produk['nama_produk'];
-                                $kategori = $produk['kategori'];
-                                $stok = $produk['stok'];
-                                $url = "edit-produk-view.php?id_produk=" . $produk['id_produk'];
-                                include '../components/card-produk-hampir-habis.php';
+                        <div class="overflow-y-auto max-h-40 grid grid-cols-1 gap-2">
+                            <?php
+                            $produkHampirHabis = getProdukAktifHampirHabis();
+                            if (empty($produkHampirHabis)) {
+                                echo '<p class="text-gray-500 text-center text-sm">Tidak ada produk yang hampir habis.</p>';
+                            } else {
+                                foreach ($produkHampirHabis as $produk) {
+                                    $nama_produk = $produk['nama_produk'];
+                                    $kategori = $produk['kategori'];
+                                    $stok = $produk['stok'];
+                                    $url = "edit-produk-view.php?id_produk=" . $produk['id_produk'];
+                                    include '../components/card-produk-hampir-habis.php';
+                                }
                             }
-                        }
-                        ?>
+                            ?>
+                        </div>
 
                     </div>
 

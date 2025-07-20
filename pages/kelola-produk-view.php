@@ -77,7 +77,7 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                     [
                         'title' => 'Stok Sedikit',
                         'value' => getTotalProdukHampirHabis(),
-                        'suffix' => '≤ 20 unit',
+                        'suffix' => '≤ 10 unit',
                         'color' => 'yellow',
                         'icon' => 'fa-solid fa-exclamation-triangle'
                     ],
@@ -189,12 +189,12 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp <?= number_format($produk['harga_jual'], 0, '.', ',') ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <p class="px-3 py-1 rounded-full <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-red-800 bg-red-100' ?> ">
+                                            <p class="px-3 py-1 rounded-full <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-center text-orange-800 bg-orange-300' ?> ">
                                                 <?= $produk['stok'] ?>
                                             </p>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-3 py-1 text-xs font-medium <?= $produk['status_produk'] == 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' ?>  rounded-full"><?= $produk['status_produk'] ?></span>
+                                            <span class="px-3 py-1 text-xs font-medium <?= $produk['status_produk'] == 'Aktif' ? 'bg-green-100 text-green-800' : 'bg-red-300 text-red-800' ?>  rounded-full"><?= $produk['status_produk'] ?></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                                             <div class="flex gap-2">
