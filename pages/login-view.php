@@ -26,14 +26,14 @@
         <!-- Username -->
         <div class="mb-4">
           <label class="block text-sm text-white mb-1">Username</label>
-          <input type="text" name="username" placeholder="Masukkan Username"
+          <input type="text" name="username" placeholder="Masukkan Username" required
             class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-200" />
         </div>
 
         <!-- Password -->
         <div class="mb-6">
           <label class="block text-sm text-white mb-1">Password</label>
-          <input type="password" name="password" placeholder="Masukkan Password"
+          <input type="password" name="password" placeholder="Masukkan Password" required
             class="w-full px-4 py-2 rounded-lg bg-white/30 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-blue-200" />
 
           <!-- PHP Notifikasi -->
