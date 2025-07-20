@@ -3,7 +3,6 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access dashboard
 
-require_once '../handler/dashboard_handler.php';
 require_once '../utils/produk_util.php';
 require_once '../utils/penjualan_util.php';
 require_once '../utils/detail_penjualan_util.php';
