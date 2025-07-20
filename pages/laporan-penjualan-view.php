@@ -3,7 +3,6 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access sales reports
 
-require_once '../handler/penjualan_handler.php'; // handler logika
 require_once '../utils/penjualan_util.php'; // fungsi data penjualan
 require_once '../utils/tools_util.php';
 
