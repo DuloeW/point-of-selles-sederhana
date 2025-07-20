@@ -3,8 +3,8 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin', 'kasir']); // Admin and kasir can access update customer
 
-require '../utils/tools_util.php';
-require '../utils/pelanggan_util.php';
+require_once '../utils/tools_util.php';
+require_once '../utils/pelanggan_util.php';
 
 // Cek apakah id_pelanggan ada di URL
 if (!isset($_GET['id_pelanggan'])) {
@@ -35,12 +35,12 @@ if (empty($pelanggan)) {
 <body class="flex w-full h-screen bg-gray-100">
     <?php
     $active = 4; // Set active menu item for Pelanggan
-    include '../components/sidebar.php'
+    include_once '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
         <?php
         $title = "Edit Pelanggan";
-        include '../components/header-page.php'
+        include_once '../components/header-page.php'
         ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">

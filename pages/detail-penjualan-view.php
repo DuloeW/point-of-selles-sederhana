@@ -3,7 +3,7 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access sales details
 
-require '../utils/detail_penjualan_util.php';
+require_once '../utils/detail_penjualan_util.php';
 
 $invoice = $_GET['invoice'] ?? '';
 

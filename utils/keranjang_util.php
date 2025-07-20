@@ -1,6 +1,6 @@
 <?php
 
-include '../auth/koneksi.php';
+require_once '../auth/koneksi.php';
 
 function getKeranjang() {
     global $koneksi;

@@ -3,8 +3,8 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access edit product
 
-require '../utils/tools_util.php';
-require '../utils/produk_util.php';
+require_once '../utils/tools_util.php';
+require_once '../utils/produk_util.php';
 
 // Cek apakah id_produk ada di URL
 if (!isset($_GET['id_produk'])) {
@@ -35,12 +35,12 @@ if (count($produk) == 0) {
 <body class="flex w-full h-screen bg-gray-100">
     <?php
     $active = 2; // Set active menu item for Produk
-    include '../components/sidebar.php'
+    include_once '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
         <?php
         $title = "Edit Produk";
-        include '../components/header-page.php'
+        include_once '../components/header-page.php'
         ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">

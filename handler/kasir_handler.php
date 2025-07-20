@@ -1,7 +1,7 @@
 <?php
-require '../auth/koneksi.php';
-require '../utils/produk_util.php';
-require '../utils/penjualan_util.php';
+require_once '../auth/koneksi.php';
+require_once '../utils/produk_util.php';
+require_once '../utils/penjualan_util.php';
 
 // Start session
 session_start();

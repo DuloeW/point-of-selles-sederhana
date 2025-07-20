@@ -3,13 +3,13 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access dashboard
 
-require '../handler/dashboard_handler.php';
-require '../utils/produk_util.php';
-require '../utils/penjualan_util.php';
-require '../utils/detail_penjualan_util.php';
-require '../utils/pengguna_util.php';
-require '../utils/pelanggan_util.php';
-require '../utils/tools_util.php';
+require_once '../handler/dashboard_handler.php';
+require_once '../utils/produk_util.php';
+require_once '../utils/penjualan_util.php';
+require_once '../utils/detail_penjualan_util.php';
+require_once '../utils/pengguna_util.php';
+require_once '../utils/pelanggan_util.php';
+require_once '../utils/tools_util.php';
 
 
 ?>
@@ -29,12 +29,12 @@ require '../utils/tools_util.php';
 <body class="flex w-full h-screen bg-gray-100">
     <?php
     $active = 1; // Set active menu item for Dasboard
-    include '../components/sidebar.php'
+    include_once '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col gap-3">
         <?php
         $title = "Dashboard";
-        include '../components/header-page.php'
+        include_once '../components/header-page.php'
         ?>
 
         <!-- containner main content -->

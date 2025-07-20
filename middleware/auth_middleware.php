@@ -9,7 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include_once __DIR__ . '/../auth/koneksi.php';
+require_once __DIR__ . '/../auth/koneksi.php';
 
 /**
  * Check if user is authenticated via session or cookies

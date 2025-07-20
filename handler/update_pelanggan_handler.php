@@ -2,7 +2,7 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin', 'kasir']);
 
-require '../auth/koneksi.php';
+require_once '../auth/koneksi.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_pelanggan = $_POST['id_pelanggan'];

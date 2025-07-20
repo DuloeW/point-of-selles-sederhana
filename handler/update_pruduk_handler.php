@@ -1,6 +1,6 @@
 <?php
-require '../auth/koneksi.php';
-require '../utils/tools_util.php';
+require_once '../auth/koneksi.php';
+require_once '../utils/tools_util.php';
 
 // Check if request is POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-include '../auth/koneksi.php';
-include '../utils/tools_util.php';
+require_once '../auth/koneksi.php';
+require_once '../utils/tools_util.php';
 
 /**
  * Validates login cookies and returns user data if valid

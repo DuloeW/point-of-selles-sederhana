@@ -3,8 +3,8 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access product management
 
-require '../utils/tools_util.php';
-require '../utils/produk_util.php';
+require_once '../utils/tools_util.php';
+require_once '../utils/produk_util.php';
 
 $kategori_aktif = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 $kode_produk = isset($_GET['kode_produk']) ? $_GET['kode_produk'] : '';
@@ -29,12 +29,12 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
 <body class="flex w-full h-screen bg-gray-100">
     <?php
     $active = 2; // Set active menu item for Kelola Produk
-    include '../components/sidebar.php'
+    include_once '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
         <?php
         $title = "Kelola Produk";
-        include '../components/header-page.php'
+        include_once '../components/header-page.php'
         ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">

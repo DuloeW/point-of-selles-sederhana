@@ -1,7 +1,7 @@
 <?php
 
-include '../auth/koneksi.php';
-include '../utils/tools_util.php';
+require_once '../auth/koneksi.php';
+require_once '../utils/tools_util.php';
 
 // Load environment variables
 $envPath = __DIR__ . '/../.env';

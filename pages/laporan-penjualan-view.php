@@ -3,9 +3,9 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access sales reports
 
-require '../handler/penjualan_handler.php'; // handler logika
-require '../utils/penjualan_util.php'; // fungsi data penjualan
-require '../utils/tools_util.php';
+require_once '../handler/penjualan_handler.php'; // handler logika
+require_once '../utils/penjualan_util.php'; // fungsi data penjualan
+require_once '../utils/tools_util.php';
 
 ?>
 
@@ -23,12 +23,12 @@ require '../utils/tools_util.php';
 
 <body class="flex bg-gray-100">
   <?php $active = 3;
-  include '../components/sidebar.php'; ?>
+  include_once '../components/sidebar.php'; ?>
   <div class="flex-1 flex flex-col h-screen">
     <!-- Header -->
     <?php
     $title = "Laporan Penjualan";
-    include '../components/header-page.php'
+    include_once '../components/header-page.php'
     ?>
 
     <!-- Konten Utama -->

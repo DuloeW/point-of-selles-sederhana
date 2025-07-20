@@ -3,8 +3,8 @@
 require_once '../middleware/auth_middleware.php';
 requireAuth(['admin']); // Only admin can access add product
 
-require '../utils/tools_util.php';
-require '../utils/produk_util.php';
+require_once '../utils/tools_util.php';
+require_once '../utils/produk_util.php';
 ?>
 
 <!DOCTYPE html>
@@ -22,12 +22,12 @@ require '../utils/produk_util.php';
 <body class="flex w-full h-screen bg-gray-100">
     <?php
     $active = 2; // Set active menu item for Produk
-    include '../components/sidebar.php'
+    include_once '../components/sidebar.php'
     ?>
     <div class="flex-1 flex flex-col">
         <?php
         $title = "Tambah Produk";
-        include '../components/header-page.php'
+        include_once '../components/header-page.php'
         ?>
 
         <main class="flex-1 flex flex-col space-y-6 w-full h-screen p-5 overflow-y-auto">

@@ -1,5 +1,5 @@
 <?php 
-include '../auth/koneksi.php';
+require_once '../auth/koneksi.php';
 
 
 $kode_produk = $_POST["kode_produk"];

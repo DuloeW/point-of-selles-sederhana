@@ -1,5 +1,5 @@
 <?php
-include '../auth/koneksi.php';
+require_once '../auth/koneksi.php';
 
 $id_produk=$_GET['id_produk'];
 

@@ -3,9 +3,9 @@
   require_once '../middleware/auth_middleware.php';
   requireAuth(['kasir']); // Both admin and kasir can access
 
-  require '../utils/produk_util.php';
-  require '../utils/tools_util.php';
-  require '../utils/keranjang_util.php';
+  require_once '../utils/produk_util.php';
+  require_once '../utils/tools_util.php';
+  require_once '../utils/keranjang_util.php';
   require_once '../utils/pelanggan_util.php';
 
   $username = $_SESSION['nama_lengkap'];

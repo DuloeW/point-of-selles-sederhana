@@ -26,13 +26,13 @@ $result = getPelangganByNomorHp($keyword);
 <body class="flex w-full h-screen bg-gray-100">
   <?php
   $active = 4; // Set active menu item for Dasboard
-  include '../components/sidebar.php'
+  include_once '../components/sidebar.php'
   ?>
   <div class="flex-1 flex flex-col gap-3">
 
     <?php
     $title = "Manajemen Pelanggan";
-    include '../components/header-page.php'
+    include_once '../components/header-page.php'
     ?>
 
     <!--Main-->
