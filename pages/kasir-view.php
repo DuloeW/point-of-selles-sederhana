@@ -8,7 +8,7 @@
   require_once '../utils/keranjang_util.php';
   require_once '../utils/pelanggan_util.php';
 
-  $username = $_SESSION['nama_lengkap'];
+  $username = $_SESSION['nama'];
 
   $kategoriDipilih = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 

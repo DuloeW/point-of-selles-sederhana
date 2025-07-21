@@ -189,7 +189,7 @@ $produkList = filterProdukByKategoriAndKodeProduk($kategori_aktif, $kode_produk)
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">Rp <?= number_format($produk['harga_jual'], 0, '.', ',') ?></td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                            <p class="px-3 py-1 rounded-full <?= $produk['stok'] > 20  ? 'text-grey-900' : 'text-center text-orange-800 bg-orange-300' ?> ">
+                                            <p class="px-3 py-1 rounded-full <?= $produk['stok'] > 10  ? 'text-grey-900' : 'text-center text-orange-800 bg-orange-300' ?> ">
                                                 <?= $produk['stok'] ?>
                                             </p>
                                         </td>
