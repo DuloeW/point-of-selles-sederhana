@@ -10,10 +10,14 @@
 
   $username = $_SESSION['nama_lengkap'];
 
+  // cek kategori produk
   $kategoriDipilih = isset($_GET['kategori']) ? $_GET['kategori'] : 'Semua';
 
+  // mengambil daftar produk
   $queryKategori = "SELECT DISTINCT kategori FROM produk WHERE kategori IS NOT NULL AND kategori != ''";
   $resultKategori = $koneksi->query($queryKategori);
+
+  // Mengecek apakah ada pencarian (keyword) yang dikirim via GET. Jika ada, akan: Escaping input agar aman dari SQL Injection.
   if (isset($_GET['keyword']) && !empty(trim($_GET['keyword']))) {
     $keyword = $koneksi->real_escape_string($_GET['keyword']);
     $produkList = [];
@@ -32,20 +36,21 @@
     $produkList = filterProdukByKategori($kategoriDipilih);
   }
 
+  // mengambil data pelanggan 
   $queryPelanggan = "SELECT pelanggan.id_pelanggan, pelanggan.nama_lengkap, member.level_member 
                    FROM pelanggan 
                    LEFT JOIN member ON pelanggan.id_pelanggan = member.id_pelanggan";
   $resultPelanggan = $koneksi->query($queryPelanggan);
 
-  // session_start();
+  // Memastikan bahwa keranjang selalu tersedia meskipun kosong saat pertama kali user masuk.
   if (!isset($_SESSION['keranjang'])) {
     $_SESSION['keranjang'] = [];
   }
 
+  // Menyimpan Pilihan Pelanggan
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_pelanggan'])) {
     $_SESSION['id_pelanggan'] = $_POST['id_pelanggan'];
   }
-
 
   // Menambahkan produk ke keranjang
   if (isset($_GET['tambah'])) {
@@ -58,7 +63,8 @@
     header("Location: ../pages/kasir-view.php?kategori=$kategoriDipilih");
     exit;
   }
-  // Kurangi jumlah
+
+  // Kurangi jumlah produk
   if (isset($_GET['kurang'])) {
     $id = $_GET['kurang'];
     if (isset($_SESSION['keranjang'][$id])) {
@@ -71,7 +77,7 @@
     exit;
   }
 
-  // Hapus item
+  // Hapus produk dari keranjang
   if (isset($_GET['hapus'])) {
     $id = $_GET['hapus'];
     unset($_SESSION['keranjang'][$id]);
@@ -79,7 +85,7 @@
     exit;
   }
 
-  // hubungkan pelanggan ke database
+  // Menambahkan Pelanggan Sebagai Member Baru
   if (
     $_SERVER['REQUEST_METHOD'] == 'POST' &&
     isset($_POST['nama_lengkap'], $_POST['telepon'], $_POST['email'], $_POST['alamat'], $_POST['level_member'])
@@ -99,10 +105,7 @@
       echo "<script>alert('{$result['message']}');</script>";
     }
   }
-
   ?>
-
-
 
   <!DOCTYPE html>
   <html lang="id">
@@ -197,11 +200,11 @@
           </div>
         </div>
 
-        <!-- Filter dan Pencarian -->
+        
 
         <!-- listproduk -->
         <div class="grid grid-cols-3 gap-4 overflow-y-auto h-[calc(100vh-200px)]">
-          <?php if (!empty($produkList)): ?>
+          <?php if (!empty($produkList)): ?> 
             <?php foreach ($produkList as $produk): ?>
               <div class="bg-white h-fit rounded-xl shadow flex flex-col items-center p-4 text-center hover:shadow-lg transition">
                 <div class="w-full h-32 rounded-lg mb-4 overflow-hidden">
@@ -262,6 +265,7 @@
               <?php endwhile; ?>
             </select>
 
+              <!--button tambah member baru-->
             <button type="button" id="openModalBtn" class="w-full mt-2 inline-flex justify-center items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-sm font-semibold rounded-lg shadow hover:from-purple-600 hover:to-indigo-700 transition">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -316,6 +320,7 @@
             <?php endif; ?>
           </div>
 
+          <!--hanya jika keranjang tidak kosong-->
           <?php if (!empty($_SESSION['keranjang'])): ?>
             <?php
             $diskonPersen = 0;
@@ -323,6 +328,8 @@
             $totalAkhir = $subtotal;
 
             $id_pelanggan = $_SESSION['id_pelanggan'] ?? 'umum';
+
+            // hitung diskon jika bukan pelanggan umum
             if ($id_pelanggan !== 'umum') {
               $query = mysqli_query($koneksi, "SELECT m.level_member, d.persentase_diskon
                                    FROM member m
@@ -335,15 +342,16 @@
                 $totalAkhir = $subtotal - $diskon;
               }
             }
-
             ?>
 
+            <!--tampilkan diskon jika ada-->
             <?php if ($diskonPersen > 0): ?>
               <div class="bg-yellow-100 text-yellow-800 p-3 rounded mb-2">
                 <p><strong>Diskon Member (<?= $diskonPersen ?>%)</strong></p>
                 <p>Rp <?= number_format($diskon, 0, ',', '.') ?></p>
               </div>
 
+              <!--tampilkan subtotal dan total akhir-->
               <div class="grid grid-cols-2 gap-4">
                 <div class="bg-gray-100 p-3 rounded">
                   <p class="text-sm text-gray-600">Subtotal:</p>
@@ -406,6 +414,7 @@
         </div>
       </div>
     </div>
+
     <script>
       const inputBayar = document.getElementById("bayar");
       const totalHarga = <?= $totalAkhir ?>;
@@ -452,10 +461,6 @@
                 bgColor = '#cd7f32';
                 iconColor = '#8b4513';
                 break;
-              case 'platinum':
-                bgColor = '#e5e4e2';
-                iconColor = '#6a5acd';
-                break;
               default:
                 bgColor = '#eee';
                 iconColor = '#555';
@@ -498,14 +503,11 @@
         ">${badgeText}</div>` : ''}
     </div>
   `);
-
             return container;
           },
-
           templateSelection: function(data) {
             return data.text;
           }
-
         });
       });
     </script>
@@ -662,8 +664,6 @@
           }
         }
       </script>
-
-
+      
   </body>
-
   </html>
